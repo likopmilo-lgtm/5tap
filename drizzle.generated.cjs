@@ -1,0 +1,1 @@
+module.exports={out:'./drizzle',schema:'./db/schema.generated.cjs',dialect:'sqlite'};
