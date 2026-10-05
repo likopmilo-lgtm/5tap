@@ -129,6 +129,7 @@ export async function writeSupabase(path: string, body: unknown, prefer = 'retur
     headers: {Prefer: prefer},
     body: JSON.stringify(body),
   });
-  if (!response.ok) throw new Error(await response.text());
-  return response.json();
+  const text = await response.text();
+  if (!response.ok) throw new Error(text);
+  return text ? JSON.parse(text) : null;
 }
