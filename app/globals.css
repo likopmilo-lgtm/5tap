@@ -107,3 +107,15 @@
   .art-tag strong{font-size:14px}
   .art-tag{font-size:12px}
 }
+.language-switcher{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px;background:#fff7}
+.language-switcher button{border:0;background:transparent;color:var(--ink);font-weight:800;font-size:11px;line-height:1;border-radius:999px;padding:7px 8px;cursor:pointer}
+.language-switcher button.selected{background:var(--ink);color:#fff}
+html[dir="rtl"] body{direction:rtl;text-align:right}
+html[dir="rtl"] .nav,html[dir="rtl"] .actions,html[dir="rtl"] .checks,html[dir="rtl"] .product-bottom,html[dir="rtl"] .lineitem,html[dir="rtl"] .footer-top,html[dir="rtl"] .footer-base{direction:rtl}
+@media(max-width:760px){.language-switcher{order:-1}.language-switcher button{font-size:10px;padding:7px 7px}.navright{gap:8px}}
+.quantity-large{width:100%;max-width:220px;background:#fff}
+.quantity-large button{font-size:24px;font-weight:800;min-width:54px;color:var(--ink)}
+.quantity-large input{width:74px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);text-align:center;font-weight:800;font-size:18px;min-height:48px;padding:0;border-radius:0;color:var(--ink);-webkit-appearance:none;appearance:textfield}
+.quantity-large input::-webkit-outer-spin-button,.quantity-large input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.order-done .btn{margin-top:10px}
+@media(max-width:760px){.quantity-large{max-width:none}.quantity-large button{min-width:64px}.quantity-large input{flex:1}.product-page .notice{padding-top:10px}.checkout-page form>button[type=submit]{font-size:16px;min-height:54px}.payment{margin-top:4px}}
