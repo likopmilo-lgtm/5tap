@@ -2,7 +2,7 @@ export type LanguageCode = 'fr' | 'en' | 'ar' | 'es';
 export const languages: {code: LanguageCode; label: string; short: string; dir: 'ltr' | 'rtl'}[] = [
   {code: 'fr', label: 'Français', short: 'FR', dir: 'ltr'},
   {code: 'en', label: 'English', short: 'EN', dir: 'ltr'},
-  {code: 'ar', label: 'Darija', short: 'دارجة', dir: 'rtl'},
+  {code: 'ar', label: 'Darija', short: 'AR', dir: 'rtl'},
   {code: 'es', label: 'Español', short: 'ES', dir: 'ltr'},
 ];
 const en: Record<string, string> = {
