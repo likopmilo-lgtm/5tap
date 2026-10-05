@@ -71,10 +71,17 @@ export const fallbackSettings: SiteSettings = {
 export const fallbackSiteData: SiteData = {
   products: fallbackProducts.map((product, index) => {
     const isBusinessCard = product.id === 'carte-visite';
-    const imageUrl = isBusinessCard ? '/carte-visite-digitale.jpg' : '/product-concept.webp';
+    const isEssentialPack = product.id === 'essentiel';
+    const imageUrl = isBusinessCard
+      ? '/carte-visite-digitale.jpg'
+      : isEssentialPack
+        ? '/pack-essentiel-stand.png'
+        : '/product-concept.webp';
     const imageAlt = isBusinessCard
       ? 'Carte de visite digitale NFC 5Tap avec profil mobile'
-      : `Illustration de la gamme 5Tap — ${product.name}`;
+      : isEssentialPack
+        ? 'Pack Essentiel 5Tap avec stand avis Google NFC et carte review'
+        : `Illustration de la gamme 5Tap — ${product.name}`;
     return {
       ...product,
       slug: product.id,
@@ -87,13 +94,19 @@ export const fallbackSiteData: SiteData = {
         {
           url: imageUrl,
           alt: imageAlt,
-          width: isBusinessCard ? 2410 : 1200,
-          height: isBusinessCard ? 1760 : 800,
+          width: isBusinessCard ? 2410 : isEssentialPack ? 1536 : 1200,
+          height: isBusinessCard ? 1760 : isEssentialPack ? 1024 : 800,
           title: product.name,
-          caption: isBusinessCard ? 'Carte de visite digitale NFC 5Tap — visuel de présentation.' : undefined,
+          caption: isBusinessCard
+            ? 'Carte de visite digitale NFC 5Tap — visuel de présentation.'
+            : isEssentialPack
+              ? 'Pack Essentiel 5Tap — stand avis Google NFC avec carte Review.'
+              : undefined,
           metadata: isBusinessCard
             ? {source: '5Tap supplied product image', usage: 'digital business card gallery'}
-            : {source: '5Tap concept image', usage: 'product gallery placeholder'},
+            : isEssentialPack
+              ? {source: '5Tap approved product visual', usage: 'essential pack gallery'}
+              : {source: '5Tap concept image', usage: 'product gallery placeholder'},
         },
       ],
       seo: {
@@ -152,3 +165,4 @@ export function primaryImage(product: SiteProduct): ProductImage {
     }
   );
 }
+
