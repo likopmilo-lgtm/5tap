@@ -827,9 +827,9 @@ export const translations: Record<string, {en:string;ary:string}> = {
     "en": "5 stars, one tap.",
     "ary": "5 نجوم، تاب وحدة."
   },
-  "Des connexions simples, depuis Tanger.": {
-    "en": "Simple connections, from Tangier.",
-    "ary": "تواصل ساهل، من طنجة."
+  "Connexions simples, partout au Maroc.": {
+    "en": "Simple connections, across Morocco.",
+    "ary": "تواصل ساهل، فالمغرب كامل."
   },
   "5Tap · Tanger, Maroc": {
     "en": "5Tap · Tangier, Morocco",
