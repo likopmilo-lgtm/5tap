@@ -53,7 +53,7 @@ export default defineConfig(async ({ command }) => {
 
   return {
     build: {
-      target: ['es2018', 'safari13'],
+      target: 'es2018',
       cssTarget: 'safari13',
     },
     server: {

@@ -20,16 +20,11 @@ Créez ces variables dans Cloudflare :
 ```bash
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-public-anon-key
-WHATSAPP_PHONE_NUMBER_ID=your-meta-phone-number-id
-WHATSAPP_ACCESS_TOKEN=your-permanent-meta-access-token
-WHATSAPP_TEMPLATE_NAME=confirmation_commande_5tap
-WHATSAPP_TEMPLATE_LANGUAGE=fr
-WHATSAPP_GRAPH_VERSION=v23.0
 ```
 
 Sans ces variables, le site garde un fallback local pour les tests, mais la production doit utiliser Supabase.
 
-Pour la confirmation automatique WhatsApp, créez dans WhatsApp Manager un modèle utilitaire approuvé nommé confirmation_commande_5tap. Le corps doit utiliser trois variables dans cet ordre : nom du client, référence de commande et total en DH. Vous pouvez ajouter deux réponses rapides statiques : « Confirmer » et « Modifier ». Sans les variables WhatsApp, la commande reste enregistrée et l’équipe peut la confirmer manuellement.
+Après l’enregistrement d’une commande, le checkout ouvre WhatsApp avec le récapitulatif prérempli. Le client appuie sur « Envoyer » pour le transmettre à 5Tap. Le numéro destinataire se modifie dans la valeur `whatsappUrl` de la table `site_settings`.
 
 ## Supabase
 

@@ -319,6 +319,11 @@ Object.assign(es, {
 
 Object.assign(en, {
   'Numéro WhatsApp':'WhatsApp number',
+  'Utilisé pour identifier et confirmer votre commande.':'Used to identify and confirm your order.',
+  'Confirmer et ouvrir WhatsApp':'Confirm and open WhatsApp',
+  'Après l’enregistrement, WhatsApp s’ouvrira avec votre commande. Appuyez sur « Envoyer » pour nous la transmettre.':'After your order is saved, WhatsApp will open with the order details. Tap “Send” to send it to us.',
+  'WhatsApp s’est ouvert avec le récapitulatif. Appuyez sur « Envoyer » pour transmettre votre confirmation à 5Tap.':'WhatsApp opened with your order summary. Tap “Send” to confirm it with 5Tap.',
+  'Ouvrir WhatsApp et envoyer':'Open WhatsApp and send',
   'Utilisé pour vous envoyer la confirmation de commande.':'Used to send your order confirmation.',
   'En confirmant, vous acceptez de recevoir sur WhatsApp les messages liés à cette commande. Vous pourrez répondre pour confirmer ou demander une modification.':'By confirming, you agree to receive WhatsApp messages about this order. You can reply to confirm or request a change.',
   'Un message de confirmation vient de vous être envoyé sur WhatsApp. Répondez pour confirmer ou demander une modification.':'A confirmation message has just been sent to you on WhatsApp. Reply to confirm or request a change.',
@@ -327,6 +332,11 @@ Object.assign(en, {
 
 Object.assign(ar, {
   'Numéro WhatsApp':'نمرة واتساب',
+  'Utilisé pour identifier et confirmer votre commande.':'غادي نستعملو النمرة باش نعرفو ونأكدو الطلبية ديالك.',
+  'Confirmer et ouvrir WhatsApp':'أكد وحل واتساب',
+  'Après l’enregistrement, WhatsApp s’ouvrira avec votre commande. Appuyez sur « Envoyer » pour nous la transmettre.':'من بعد ما تتسجل الطلبية، غادي يتحل واتساب وفيه التفاصيل. كليك على «إرسال» باش توصلنا.',
+  'WhatsApp s’est ouvert avec le récapitulatif. Appuyez sur « Envoyer » pour transmettre votre confirmation à 5Tap.':'تحل واتساب وفيه ملخص الطلبية. كليك على «إرسال» باش تأكدها مع 5Tap.',
+  'Ouvrir WhatsApp et envoyer':'حل واتساب وصيفط',
   'Utilisé pour vous envoyer la confirmation de commande.':'غادي نستعملوها باش نصيفطو ليك تأكيد الطلبية.',
   'En confirmant, vous acceptez de recevoir sur WhatsApp les messages liés à cette commande. Vous pourrez répondre pour confirmer ou demander une modification.':'ملي كتأكد، كتوافق توصلك فواتساب الرسائل الخاصة بهاد الطلبية. تقدر تجاوب باش تأكد ولا تطلب تغيير.',
   'Un message de confirmation vient de vous être envoyé sur WhatsApp. Répondez pour confirmer ou demander une modification.':'صيفطنا ليك دابا رسالة التأكيد فواتساب. جاوب باش تأكد ولا تطلب تغيير.',
@@ -335,6 +345,11 @@ Object.assign(ar, {
 
 Object.assign(es, {
   'Numéro WhatsApp':'Número de WhatsApp',
+  'Utilisé pour identifier et confirmer votre commande.':'Se utiliza para identificar y confirmar tu pedido.',
+  'Confirmer et ouvrir WhatsApp':'Confirmar y abrir WhatsApp',
+  'Après l’enregistrement, WhatsApp s’ouvrira avec votre commande. Appuyez sur « Envoyer » pour nous la transmettre.':'Después de guardar el pedido, se abrirá WhatsApp con los detalles. Pulsa «Enviar» para mandárnoslo.',
+  'WhatsApp s’est ouvert avec le récapitulatif. Appuyez sur « Envoyer » pour transmettre votre confirmation à 5Tap.':'WhatsApp se abrió con el resumen del pedido. Pulsa «Enviar» para confirmarlo con 5Tap.',
+  'Ouvrir WhatsApp et envoyer':'Abrir WhatsApp y enviar',
   'Utilisé pour vous envoyer la confirmation de commande.':'Se utiliza para enviarte la confirmación del pedido.',
   'En confirmant, vous acceptez de recevoir sur WhatsApp les messages liés à cette commande. Vous pourrez répondre pour confirmer ou demander une modification.':'Al confirmar, aceptas recibir por WhatsApp mensajes relacionados con este pedido. Podrás responder para confirmar o solicitar un cambio.',
   'Un message de confirmation vient de vous être envoyé sur WhatsApp. Répondez pour confirmer ou demander une modification.':'Te acabamos de enviar un mensaje de confirmación por WhatsApp. Responde para confirmar o solicitar un cambio.',
