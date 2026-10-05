@@ -317,6 +317,30 @@ Object.assign(es, {
   'Ils nous font confiance':'Confían en nosotros','Des clients rassurés.':'Clientes tranquilos.','Des avis plus simples.':'Reseñas más simples.','Restaurants, cafés, riads et professionnels à Tanger utilisent 5Tap pour faciliter le contact avec leurs clients.':'Restaurantes, cafés, riads y profesionales en Tánger usan 5Tap para facilitar el contacto con sus clientes.','Riad à Tanger':'Riad en Tánger','Le stand est propre sur le comptoir et les clients comprennent tout de suite quoi faire. On a gagné en avis sans déranger personne.':'El soporte se ve limpio en el mostrador y los clientes entienden rápido qué hacer. Ganamos reseñas sin molestar a nadie.','Installation faite sur place':'Instalado en el local','Café local':'Café local','La carte Google Review est simple à présenter après le service. Le paiement à la livraison et la configuration incluse nous ont rassurés.':'La tarjeta Google Review es fácil de presentar después del servicio. El pago contra entrega y la configuración incluida nos dieron confianza.','Commande facile':'Pedido fácil','Consultant indépendant':'Consultor independiente','Ma carte de visite NFC fait plus professionnel qu’une carte classique. Je partage mes coordonnées et mes liens en quelques secondes.':'Mi tarjeta NFC se ve más profesional que una tarjeta clásica. Comparto mis datos y enlaces en segundos.','Carte personnalisée':'Tarjeta personalizada','Prix accessibles dès 150 DH':'Precios accesibles desde 150 DH'
 });
 
+Object.assign(en, {
+  'Numéro WhatsApp':'WhatsApp number',
+  'Utilisé pour vous envoyer la confirmation de commande.':'Used to send your order confirmation.',
+  'En confirmant, vous acceptez de recevoir sur WhatsApp les messages liés à cette commande. Vous pourrez répondre pour confirmer ou demander une modification.':'By confirming, you agree to receive WhatsApp messages about this order. You can reply to confirm or request a change.',
+  'Un message de confirmation vient de vous être envoyé sur WhatsApp. Répondez pour confirmer ou demander une modification.':'A confirmation message has just been sent to you on WhatsApp. Reply to confirm or request a change.',
+  'Votre commande est bien enregistrée. Notre équipe vous contactera rapidement pour la confirmer.':'Your order has been saved. Our team will contact you shortly to confirm it.'
+});
+
+Object.assign(ar, {
+  'Numéro WhatsApp':'نمرة واتساب',
+  'Utilisé pour vous envoyer la confirmation de commande.':'غادي نستعملوها باش نصيفطو ليك تأكيد الطلبية.',
+  'En confirmant, vous acceptez de recevoir sur WhatsApp les messages liés à cette commande. Vous pourrez répondre pour confirmer ou demander une modification.':'ملي كتأكد، كتوافق توصلك فواتساب الرسائل الخاصة بهاد الطلبية. تقدر تجاوب باش تأكد ولا تطلب تغيير.',
+  'Un message de confirmation vient de vous être envoyé sur WhatsApp. Répondez pour confirmer ou demander une modification.':'صيفطنا ليك دابا رسالة التأكيد فواتساب. جاوب باش تأكد ولا تطلب تغيير.',
+  'Votre commande est bien enregistrée. Notre équipe vous contactera rapidement pour la confirmer.':'الطلبية ديالك تسجلات. الفريق غادي يتاصل بيك قريب باش يأكدها.'
+});
+
+Object.assign(es, {
+  'Numéro WhatsApp':'Número de WhatsApp',
+  'Utilisé pour vous envoyer la confirmation de commande.':'Se utiliza para enviarte la confirmación del pedido.',
+  'En confirmant, vous acceptez de recevoir sur WhatsApp les messages liés à cette commande. Vous pourrez répondre pour confirmer ou demander une modification.':'Al confirmar, aceptas recibir por WhatsApp mensajes relacionados con este pedido. Podrás responder para confirmar o solicitar un cambio.',
+  'Un message de confirmation vient de vous être envoyé sur WhatsApp. Répondez pour confirmer ou demander une modification.':'Te acabamos de enviar un mensaje de confirmación por WhatsApp. Responde para confirmar o solicitar un cambio.',
+  'Votre commande est bien enregistrée. Notre équipe vous contactera rapidement pour la confirmer.':'Tu pedido está registrado. Nuestro equipo te contactará pronto para confirmarlo.'
+});
+
 export const dictionaries: Record<Exclude<LanguageCode, 'fr'>, Record<string, string>> = {en, ar, es};
 export function getInitialLanguage(): LanguageCode {if(typeof window==='undefined')return 'fr';const query=new URLSearchParams(window.location.search).get('lang') as LanguageCode|null;const saved=localStorage.getItem('5tap-lang') as LanguageCode|null;const value=query||saved||'fr';return languages.some(l=>l.code===value)?value:'fr'}
 function replaceExact(value:string,lang:LanguageCode){if(lang==='fr')return value;const translated=dictionaries[lang][value.trim()];return translated?value.replace(value.trim(),translated):value}
