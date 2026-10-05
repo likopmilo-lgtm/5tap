@@ -69,30 +69,41 @@ export const fallbackSettings: SiteSettings = {
 };
 
 export const fallbackSiteData: SiteData = {
-  products: fallbackProducts.map((product, index) => ({
-    ...product,
-    slug: product.id,
-    sortOrder: index + 1,
-    isActive: true,
-    isFeatured: product.category === 'packs',
-    imageUrl: '/product-concept.webp',
-    imageAlt: `Illustration de la gamme 5Tap — ${product.name}`,
-    images: [
-      {
-        url: '/product-concept.webp',
-        alt: `Illustration de la gamme 5Tap — ${product.name}`,
-        width: 1200,
-        height: 800,
-        title: product.name,
-        metadata: {source: '5Tap concept image', usage: 'product gallery placeholder'},
+  products: fallbackProducts.map((product, index) => {
+    const isBusinessCard = product.id === 'carte-visite';
+    const imageUrl = isBusinessCard ? '/carte-visite-digitale.jpg' : '/product-concept.webp';
+    const imageAlt = isBusinessCard
+      ? 'Carte de visite digitale NFC 5Tap avec profil mobile'
+      : `Illustration de la gamme 5Tap — ${product.name}`;
+    return {
+      ...product,
+      slug: product.id,
+      sortOrder: index + 1,
+      isActive: true,
+      isFeatured: product.category === 'packs',
+      imageUrl,
+      imageAlt,
+      images: [
+        {
+          url: imageUrl,
+          alt: imageAlt,
+          width: isBusinessCard ? 2410 : 1200,
+          height: isBusinessCard ? 1760 : 800,
+          title: product.name,
+          caption: isBusinessCard ? 'Carte de visite digitale NFC 5Tap — visuel de présentation.' : undefined,
+          metadata: isBusinessCard
+            ? {source: '5Tap supplied product image', usage: 'digital business card gallery'}
+            : {source: '5Tap concept image', usage: 'product gallery placeholder'},
+        },
+      ],
+      seo: {
+        title: `${product.name} — ${product.price} DH`,
+        description: product.desc,
+        canonicalPath: `/produit/${product.id}`,
+        ogImage: imageUrl,
       },
-    ],
-    seo: {
-      title: `${product.name} — ${product.price} DH`,
-      description: product.desc,
-      canonicalPath: `/produit/${product.id}`,
-    },
-  })),
+    };
+  }),
   faqs: fallbackFaqs.map(([question, answer]) => [question, answer] as [string, string]),
   settings: fallbackSettings,
   pages: {
