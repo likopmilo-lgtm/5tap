@@ -10,7 +10,7 @@ export async function POST(request:Request){
   let b;try{b=JSON.parse(raw)}catch{return fail('Données invalides.')}
   if(!b||typeof b!=='object'||Array.isArray(b))return fail('Données invalides.');
   for(const key of ['id','name','phone','city','address','notes'])if(typeof b[key]!=='string')return fail('Veuillez vérifier vos coordonnées.');
-  if(!/^[0-9a-f-]{36}$/i.test(b.id)||b.name.trim().length<2||b.name.length>100||b.city.trim().length<2||b.city.length>100||b.address.trim().length<8||b.address.length>500||b.notes.length>1000||!/^\+?[0-9\s()-]{9,20}$/.test(b.phone))return fail('Veuillez vérifier votre nom, téléphone et adresse.');
+  if(!/^[0-9a-f-]{36}$/i.test(b.id)||b.name.trim().length<2||b.name.length>100||b.city.trim().length<2||b.city.length>100||b.address.trim().length<8||b.address.length>500||b.notes.length>1000||!/^\+?[0-9\s()-]{9,20}$/.test(b.phone))return fail('Veuillez vérifier votre nom, téléphone et ville.');
   if(b.website)return fail('Commande non acceptée.');
   if(!Array.isArray(b.items)||b.items.length<1||b.items.length>5)return fail('Votre panier est vide ou invalide.');
   const site=await getSiteData();const products=site.products;const ids=new Set();const items=[];
