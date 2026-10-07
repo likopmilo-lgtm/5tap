@@ -26,6 +26,9 @@ const replacements = new Map(
 
 for (const [oldName, newName] of replacements) {
   await rename(path.join(chunks, oldName), path.join(chunks, newName));
+  const renamed = path.join(chunks, newName);
+  const source = await readFile(renamed, "utf8");
+  await writeFile(renamed, `${source}\n/* 5Tap Safari asset refresh */\n`);
 }
 
 for (const file of await filesIn(root)) {
