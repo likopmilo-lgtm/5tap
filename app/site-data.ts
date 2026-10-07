@@ -148,7 +148,7 @@ export const fallbackSiteData: SiteData = {
 export function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData {
   if (!data) data = fallbackSiteData;
   return {
-    products: (Array.isArray(data.products) && data.products.length ? data.products : fallbackSiteData.products).map(withStudioMedia),
+    products: (Array.isArray(data.products) && data.products.length ? data.products : fallbackSiteData.products).map(withMarketingPrice).map(withStudioMedia),
     faqs: Array.isArray(data.faqs) && data.faqs.length ? data.faqs : fallbackSiteData.faqs,
     settings: {...fallbackSiteData.settings, ...(data.settings || {})},
     pages: {...fallbackSiteData.pages, ...(data.pages || {})},
@@ -174,4 +174,16 @@ function withStudioMedia(product: SiteProduct): SiteProduct {
  const legacy = ['/product-concept.webp','/product-concept.png','/carte-visite-digitale.jpg','/pack-essentiel-stand.png'];
  if (!media || (current && !legacy.includes(current))) return product;
  return {...product,imageUrl:media.url,imageAlt:media.alt,images:[media,...(product.images?.slice(1)||[])],seo:{...product.seo,ogImage:!product.seo?.ogImage || legacy.includes(product.seo.ogImage)?media.url:product.seo.ogImage}};
+}
+
+function withMarketingPrice(product: SiteProduct): SiteProduct {
+  const legacyPrices: Record<string, [number, number]> = {
+    'carte-google': [150, 149],
+    essentiel: [250, 249],
+    pro: [300, 299],
+    prestige: [400, 399],
+    'carte-visite': [150, 149],
+  };
+  const change = legacyPrices[product.id];
+  return change && product.price === change[0] ? {...product, price: change[1]} : product;
 }
