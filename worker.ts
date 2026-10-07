@@ -32,20 +32,6 @@ export default {
       });
     }
 
-    if (response.headers.get("content-type")?.includes("text/html")) {
-      const headers = new Headers(response.headers);
-      headers.delete("content-length");
-      const html = (await response.text()).replace(
-        /((?:src|href)=")(\/[^"?]+\.(?:css|js|png|jpe?g|webp|gif|svg|ico|woff2?))(")/gi,
-        "$1$2?v=20261007$3",
-      );
-      return new Response(html, {
-        status: response.status,
-        statusText: response.statusText,
-        headers,
-      });
-    }
-
     return response;
   },
 };
