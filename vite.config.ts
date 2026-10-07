@@ -12,9 +12,6 @@ const managedLinux = readExecutionProfile() === "managed-linux";
 const localBindingConfig = {
   main: "./worker.ts",
   compatibility_flags: ["nodejs_compat"],
-  // Route assets through the worker so it can repair missing JavaScript MIME
-  // headers before Safari and other strict browsers evaluate the bundles.
-  assets: { run_worker_first: true },
   // Production data is stored in Supabase; do not deploy the preview-only
   // placeholder D1 database to Cloudflare.
   d1_databases: [],
