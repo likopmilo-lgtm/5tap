@@ -1,3 +1,4 @@
+import {studioMedia} from './product-media';
 import {faqs as fallbackFaqs, products as fallbackProducts, whatsapp} from './catalog';
 
 export type ProductImage = {
@@ -62,10 +63,10 @@ export const fallbackSettings: SiteSettings = {
   instagramUrl: 'https://www.instagram.com/5tap.ma/',
   defaultTitle: '5Tap — Cartes de visite digitales et avis Google',
   defaultDescription:
-    'Cartes de visite digitales NFC personnalisées et supports avis Google dès 150 DH. Installation à Tanger et paiement à la livraison.',
+    'Cartes de visite digitales NFC personnalisées et supports avis Google dès 149 DH. Livraison gratuite partout au Maroc et paiement à la livraison.',
   currency: 'MAD',
-  tangierShipping: 20,
-  moroccoShipping: 40,
+  tangierShipping: 0,
+  moroccoShipping: 0,
 };
 
 export const fallbackSiteData: SiteData = {
@@ -128,7 +129,7 @@ export const fallbackSiteData: SiteData = {
     shop: {
       title: 'Boutique NFC — Cartes et packs',
       description:
-        'Comparez les cartes et stands NFC 5Tap : 150 à 400 DH. Commande sans compte et paiement à la livraison partout au Maroc.',
+        'Comparez les cartes et stands NFC 5Tap : 149 à 399 DH. Livraison gratuite, commande sans compte et paiement à la livraison partout au Maroc.',
       seo: {canonicalPath: '/boutique'},
     },
     faq: {
@@ -145,9 +146,9 @@ export const fallbackSiteData: SiteData = {
 };
 
 export function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData {
-  if (!data) return fallbackSiteData;
+  if (!data) data = fallbackSiteData;
   return {
-    products: Array.isArray(data.products) && data.products.length ? data.products : fallbackSiteData.products,
+    products: (Array.isArray(data.products) && data.products.length ? data.products : fallbackSiteData.products).map(withStudioMedia),
     faqs: Array.isArray(data.faqs) && data.faqs.length ? data.faqs : fallbackSiteData.faqs,
     settings: {...fallbackSiteData.settings, ...(data.settings || {})},
     pages: {...fallbackSiteData.pages, ...(data.pages || {})},
@@ -166,3 +167,11 @@ export function primaryImage(product: SiteProduct): ProductImage {
   );
 }
 
+
+function withStudioMedia(product: SiteProduct): SiteProduct {
+ const media = studioMedia[product.id as keyof typeof studioMedia];
+ const current = product.images?.[0]?.url || product.imageUrl;
+ const legacy = ['/product-concept.webp','/product-concept.png','/carte-visite-digitale.jpg','/pack-essentiel-stand.png'];
+ if (!media || (current && !legacy.includes(current))) return product;
+ return {...product,imageUrl:media.url,imageAlt:media.alt,images:[media,...(product.images?.slice(1)||[])],seo:{...product.seo,ogImage:!product.seo?.ogImage || legacy.includes(product.seo.ogImage)?media.url:product.seo.ogImage}};
+}
