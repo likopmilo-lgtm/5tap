@@ -2,7 +2,6 @@ import handler from "vinext/server/fetch-handler";
 
 export default {
   async fetch(request: Request, env: unknown, ctx: ExecutionContext) {
-    const response = await handler.fetch(request, env, ctx);
     const pathname = new URL(request.url).pathname;
     const extension = pathname.slice(pathname.lastIndexOf(".")).toLowerCase();
     const mimeTypes: Record<string, string> = {
@@ -23,6 +22,10 @@ export default {
     // Cloudflare can return vinext assets as text/plain. Safari refuses those
     // styles, images and modules, so normalize every browser asset response.
     if (mimeTypes[extension]) {
+      const assets = (env as { ASSETS?: { fetch(request: Request): Promise<Response> } }).ASSETS;
+      const response = assets
+        ? await assets.fetch(request)
+        : await handler.fetch(request, env, ctx);
       const headers = new Headers(response.headers);
       headers.set("content-type", mimeTypes[extension]);
       return new Response(response.body, {
@@ -32,6 +35,6 @@ export default {
       });
     }
 
-    return response;
+    return handler.fetch(request, env, ctx);
   },
 };
