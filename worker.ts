@@ -8,7 +8,7 @@ export default {
     // Cloudflare occasionally omits the MIME type on shared vinext chunks.
     // Browsers then refuse to hydrate the page, leaving interactive sections
     // such as checkout and the language picker in their loading state.
-    if (pathname.endsWith(".js") && !response.headers.get("content-type")) {
+    if (pathname.endsWith(".js")) {
       const headers = new Headers(response.headers);
       headers.set("content-type", "text/javascript; charset=utf-8");
       return new Response(response.body, {
