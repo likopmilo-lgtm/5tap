@@ -8,7 +8,8 @@ export async function quotePromo(value:unknown,subtotal:number){
   try{
    const result=await writeSupabase('rpc/quote_promo',{p_code:code,p_subtotal:subtotal});
    if(!result||!Number.isFinite(Number(result.discount))||Number(result.discount)<=0||Number(result.discount)>subtotal)throw new PromoError('Code promo invalide ou non applicable.');
-   return {code,discount:Math.round(Number(result.discount)*100)/100};
+   const total=Math.floor(subtotal-Number(result.discount));
+   return {code,discount:subtotal-total};
   }catch(error){
    if(error instanceof PromoError)throw error;
    // Only the missing migration enables the user-approved launch promotion.
@@ -17,5 +18,6 @@ export async function quotePromo(value:unknown,subtotal:number){
   }
  }
  if(code!=='STATI')throw new PromoError('Code promo invalide ou non applicable.');
- return {code,discount:Math.round(subtotal*15)/100};
+ const total=Math.floor(subtotal*0.85);
+ return {code,discount:subtotal-total};
 }
