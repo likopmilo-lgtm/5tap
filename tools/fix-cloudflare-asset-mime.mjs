@@ -3,7 +3,6 @@ import path from "node:path";
 
 const root = path.resolve("dist");
 const chunks = path.join(root, "client", "_next", "static", "chunks");
-const prefixes = ["rolldown-runtime-", "framework-", "streamed-icons-"];
 
 async function filesIn(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -16,9 +15,7 @@ async function filesIn(directory) {
   return nested.flat();
 }
 
-const chunkNames = (await readdir(chunks)).filter(
-  (name) => name.endsWith(".js") && prefixes.some((prefix) => name.startsWith(prefix)),
-);
+const chunkNames = (await readdir(chunks)).filter((name) => name.endsWith(".js"));
 
 const replacements = new Map(
   chunkNames.map((name) => [name, name.replace(/\.js$/, "-5tap.js")]),
