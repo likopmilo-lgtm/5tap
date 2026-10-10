@@ -20,7 +20,15 @@ export type ProductSeo = {
   noindex?: boolean;
 };
 
-export type SiteProduct = (typeof fallbackProducts)[number] & {
+export type SiteProduct = {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  label: string;
+  desc: string;
+  items: readonly string[];
+  custom: boolean;
   slug?: string;
   sortOrder?: number;
   isActive?: boolean;
@@ -63,7 +71,7 @@ export const fallbackSettings: SiteSettings = {
   instagramUrl: 'https://www.instagram.com/5tap.ma/',
   defaultTitle: '5Tap — Cartes de visite digitales et avis Google',
   defaultDescription:
-    'Cartes de visite digitales NFC personnalisées et supports avis Google dès 149 DH. Livraison gratuite partout au Maroc et paiement à la livraison.',
+    'Cartes de visite digitales NFC dès 179 DH et supports Google Review dès 149 DH. Livraison incluse partout au Maroc.',
   currency: 'MAD',
   tangierShipping: 0,
   moroccoShipping: 0,
@@ -71,18 +79,11 @@ export const fallbackSettings: SiteSettings = {
 
 export const fallbackSiteData: SiteData = {
   products: fallbackProducts.map((product, index) => {
-    const isBusinessCard = product.id === 'carte-visite';
+    const isBusinessCard = product.category === 'visite';
     const isEssentialPack = product.id === 'essentiel';
-    const imageUrl = isBusinessCard
-      ? '/carte-visite-digitale.jpg'
-      : isEssentialPack
-        ? '/pack-essentiel-stand.png'
-        : '/product-concept.webp';
-    const imageAlt = isBusinessCard
-      ? 'Carte de visite digitale NFC 5Tap avec profil mobile'
-      : isEssentialPack
-        ? 'Pack Essentiel 5Tap avec stand avis Google NFC et carte review'
-        : `Illustration de la gamme 5Tap — ${product.name}`;
+    const productMedia = studioMedia[product.id as keyof typeof studioMedia];
+    const imageUrl = productMedia?.url || '/product-concept.webp';
+    const imageAlt = productMedia?.alt || `Illustration de la gamme 5Tap — ${product.name}`;
     return {
       ...product,
       slug: product.id,
@@ -129,12 +130,12 @@ export const fallbackSiteData: SiteData = {
     shop: {
       title: 'Boutique NFC — Cartes et packs',
       description:
-        'Comparez les cartes et stands NFC 5Tap : 149 à 399 DH. Livraison gratuite, commande sans compte et paiement à la livraison partout au Maroc.',
+        'Comparez les cartes de visite digitales NFC et les supports Google Review 5Tap de 149 à 399 DH. Livraison incluse partout au Maroc.',
       seo: {canonicalPath: '/boutique'},
     },
     faq: {
       title: 'FAQ 5Tap',
-      description: 'Réponses sur les cartes NFC, les avis Google, la livraison au Maroc et le paiement à la livraison.',
+      description: 'Réponses sur les cartes NFC, les avis Google, la personnalisation, le paiement et la livraison au Maroc.',
       seo: {canonicalPath: '/faq'},
     },
     contact: {
@@ -147,11 +148,51 @@ export const fallbackSiteData: SiteData = {
 
 export function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData {
   if (!data) data = fallbackSiteData;
+  const incoming = Array.isArray(data.products) ? data.products : [];
+  const catalogIsCurrent = incoming.some(item => item.id === 'carte-visite-personnalisee' || item.slug === 'carte-visite-personnalisee') &&
+    incoming.some(item => item.id === 'carte-visite' && item.price === 179);
+  const canonicalProducts = fallbackSiteData.products.map(canonical => {
+    const remote = incoming.find(item => item.id === canonical.id || item.slug === canonical.id);
+    if (!remote) return withStudioMedia(canonical);
+    const merged = {
+      ...remote,
+      id: canonical.id,
+      slug: canonical.id,
+      name: canonical.name,
+      price: canonical.price,
+      category: canonical.category,
+      label: canonical.label,
+      desc: canonical.desc,
+      items: canonical.items,
+      custom: canonical.custom,
+      sortOrder: canonical.sortOrder,
+      isActive: true,
+      seo: {
+        ...remote.seo,
+        title: `${canonical.name} — ${canonical.price} DH`,
+        description: canonical.desc,
+        canonicalPath: `/produit/${canonical.id}`,
+      },
+    } as SiteProduct;
+    return withStudioMedia(merged);
+  });
+  const products = catalogIsCurrent ? incoming.filter(item => item.isActive !== false).map(withStudioMedia) : canonicalProducts;
+  const canonicalPages = Object.fromEntries(Object.entries(fallbackSiteData.pages).map(([slug, canonical]) => [
+    slug,
+    {...(data.pages?.[slug] || {}), ...canonical, seo: {...(data.pages?.[slug]?.seo || {}), ...(canonical.seo || {})}},
+  ]));
   return {
-    products: (Array.isArray(data.products) && data.products.length ? data.products : fallbackSiteData.products).map(withMarketingPrice).map(withStudioMedia),
-    faqs: Array.isArray(data.faqs) && data.faqs.length ? data.faqs : fallbackSiteData.faqs,
-    settings: {...fallbackSiteData.settings, ...(data.settings || {})},
-    pages: {...fallbackSiteData.pages, ...(data.pages || {})},
+    products,
+    faqs: catalogIsCurrent && Array.isArray(data.faqs) && data.faqs.length ? data.faqs : fallbackSiteData.faqs,
+    settings: catalogIsCurrent ? {...fallbackSiteData.settings, ...(data.settings || {})} : {
+      ...fallbackSiteData.settings,
+      ...(data.settings || {}),
+      defaultTitle: fallbackSiteData.settings.defaultTitle,
+      defaultDescription: fallbackSiteData.settings.defaultDescription,
+      tangierShipping: 0,
+      moroccoShipping: 0,
+    },
+    pages: catalogIsCurrent ? {...fallbackSiteData.pages, ...(data.pages || {})} : canonicalPages,
   };
 }
 
@@ -174,16 +215,4 @@ function withStudioMedia(product: SiteProduct): SiteProduct {
  const legacy = ['/product-concept.webp','/product-concept.png','/carte-visite-digitale.jpg','/pack-essentiel-stand.png'];
  if (!media || (current && !legacy.includes(current))) return product;
  return {...product,imageUrl:media.url,imageAlt:media.alt,images:[media,...(product.images?.slice(1)||[])],seo:{...product.seo,ogImage:!product.seo?.ogImage || legacy.includes(product.seo.ogImage)?media.url:product.seo.ogImage}};
-}
-
-function withMarketingPrice(product: SiteProduct): SiteProduct {
-  const legacyPrices: Record<string, [number, number]> = {
-    'carte-google': [150, 149],
-    essentiel: [250, 249],
-    pro: [300, 299],
-    prestige: [400, 399],
-    'carte-visite': [150, 149],
-  };
-  const change = legacyPrices[product.id];
-  return change && product.price === change[0] ? {...product, price: change[1]} : product;
 }

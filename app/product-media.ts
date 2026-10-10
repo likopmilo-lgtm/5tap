@@ -12,6 +12,15 @@ export const studioMedia = {
       "type": "product"
     }
   },
+  "carte-visite-personnalisee": {
+    "url": "/images/carte-visite-personnalisee.webp",
+    "alt": "Carte de visite NFC personnalisable noire et or avec emplacement Votre logo et aperçu du profil digital",
+    "width": 1536,
+    "height": 1024,
+    "title": "Carte de visite digitale NFC personnalisée",
+    "caption": "Aperçu du support. Votre logo est intégré après validation du visuel.",
+    "metadata": {"source":"5Tap product reference — AI studio visual","type":"product"}
+  },
   "carte-google": {
     "url": "/images/carte-google-studio.webp",
     "alt": "Carte NFC Google Review 5Tap noire avec logo Google et cinq étoiles",
