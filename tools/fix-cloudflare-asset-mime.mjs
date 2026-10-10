@@ -18,14 +18,14 @@ async function filesIn(directory) {
 const chunkNames = (await readdir(chunks)).filter((name) => name.endsWith(".js"));
 
 const replacements = new Map(
-  chunkNames.map((name) => [name, name.replace(/\.js$/, "-5tap.js")]),
+  chunkNames.map((name) => [name, name.replace(/\.js$/, "-5tap-v3.js")]),
 );
 
 for (const [oldName, newName] of replacements) {
   await rename(path.join(chunks, oldName), path.join(chunks, newName));
   const renamed = path.join(chunks, newName);
   const source = await readFile(renamed, "utf8");
-  await writeFile(renamed, `${source}\n/* 5Tap Safari asset refresh v2 */\n`);
+  await writeFile(renamed, `${source}\n/* 5Tap Safari asset refresh v3 */\n`);
 }
 
 for (const file of await filesIn(root)) {

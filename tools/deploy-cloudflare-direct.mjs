@@ -77,7 +77,7 @@ async function buildAssetManifest() {
   for (const file of files) {
     const buffer = await readFile(file.full);
     const ext = path.extname(file.rel).toLowerCase().replace('.', '') || 'bin';
-    const key = blake3Wasm.hash(buffer.toString('base64') + ext + '5tap-mime-v2').toString('hex').slice(0, 32);
+    const key = blake3Wasm.hash(buffer.toString('base64') + ext + '5tap-safari-v3').toString('hex').slice(0, 32);
     manifest[file.rel] = { hash: key, size: buffer.length };
     byHash.set(key, { ...file, buffer });
   }
