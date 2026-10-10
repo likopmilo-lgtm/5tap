@@ -50,8 +50,8 @@ function contentType(file) {
   return {
     '.html': 'text/html; charset=utf-8',
     '.css': 'text/css; charset=utf-8',
-    '.js': 'text/javascript; charset=utf-8',
-    '.mjs': 'text/javascript; charset=utf-8',
+    '.js': 'application/javascript+module',
+    '.mjs': 'application/javascript+module',
     '.json': 'application/json; charset=utf-8',
     '.svg': 'image/svg+xml',
     '.png': 'image/png',
@@ -63,6 +63,13 @@ function contentType(file) {
   }[ext] || 'application/octet-stream';
 }
 
+function assetContentType(file) {
+  const type = contentType(file);
+  return type === 'application/javascript+module'
+    ? 'text/javascript; charset=utf-8'
+    : type;
+}
+
 async function buildAssetManifest() {
   const files = await listFiles(clientDir);
   const manifest = {};
@@ -70,7 +77,7 @@ async function buildAssetManifest() {
   for (const file of files) {
     const buffer = await readFile(file.full);
     const ext = path.extname(file.rel).toLowerCase().replace('.', '') || 'bin';
-    const key = blake3Wasm.hash(buffer.toString('base64') + ext).toString('hex').slice(0, 32);
+    const key = blake3Wasm.hash(buffer.toString('base64') + ext + '5tap-mime-v2').toString('hex').slice(0, 32);
     manifest[file.rel] = { hash: key, size: buffer.length };
     byHash.set(key, { ...file, buffer });
   }
@@ -91,7 +98,9 @@ async function uploadAssets() {
     for (const hash of bucket) {
       const asset = byHash.get(hash);
       if (!asset) throw new Error(`Missing asset ${hash}`);
-      form.append(hash, asset.buffer.toString('base64'));
+      form.append(hash, new Blob([asset.buffer.toString('base64')], {
+        type: assetContentType(asset.full),
+      }));
     }
     const uploaded = await cf(`/accounts/${accountId}/workers/assets/upload?base64=true`, {
       method: 'POST',
