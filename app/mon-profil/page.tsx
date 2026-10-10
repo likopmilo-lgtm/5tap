@@ -1,0 +1,3 @@
+import ProfileBuilder from '../profile-builder';
+export const metadata={title:'Activer ma carte',description:'Activez votre carte NFC 5Tap, ajoutez vos coordonnées et choisissez sa destination.',robots:{index:true,follow:true}};
+export default async function Page({searchParams}:{searchParams:Promise<{card?:string}>}){const{card}=await searchParams;const cardSlug=typeof card==='string'&&/^[a-z0-9-]{3,64}$/.test(card)?card:'';return <main className="client-area"><header className="client-header"><a href="/" aria-label="Retour à 5Tap"><img src="/logo-5tap.png" width="160" height="64" alt="5Tap"/></a><a href="/contact" className="detail-link">Besoin d’aide ?</a></header><section className="wrap client-profile-section"><ProfileBuilder cardSlug={cardSlug}/></section></main>}

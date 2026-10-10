@@ -1,0 +1,2 @@
+import {destinationUrl,getPublicCardProfile} from '../../card-profile';
+export async function GET(request:Request,{params}:{params:Promise<{slug:string}>}){const{slug}=await params;const profile=await getPublicCardProfile(slug);if(!profile){const activation=new URL('/mon-profil',request.url);activation.searchParams.set('card',slug);return Response.redirect(activation,302)}const destination=destinationUrl(profile);return Response.redirect(destination||new URL(`/p/${profile.public_slug}`,request.url),302)}

@@ -42,6 +42,8 @@ tsconfig.tsbuildinfo
 /.wrangler/
 # Checkout-local execution profile and tool state; never publish them.
 /.sites-runtime/
+/.localappdata/
+/provisioning/private/
 /.agents/
 /.codex/
 /outputs/
