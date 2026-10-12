@@ -71,7 +71,7 @@ export const fallbackSettings: SiteSettings = {
   instagramUrl: 'https://www.instagram.com/5tap.ma/',
   defaultTitle: '5Tap — Cartes de visite digitales et avis Google',
   defaultDescription:
-    'Cartes de visite digitales NFC dès 179 DH et supports Google Review dès 149 DH. Livraison incluse partout au Maroc.',
+    'Cartes de visite digitales NFC dès 179 DH et supports Google Review dès 149 DH. Livraison gratuite partout au Maroc.',
   currency: 'MAD',
   tangierShipping: 0,
   moroccoShipping: 0,
@@ -130,7 +130,7 @@ export const fallbackSiteData: SiteData = {
     shop: {
       title: 'Boutique NFC — Cartes et packs',
       description:
-        'Comparez les cartes de visite digitales NFC et les supports Google Review 5Tap de 149 à 399 DH. Livraison incluse partout au Maroc.',
+        'Comparez les cartes de visite digitales NFC et les supports Google Review 5Tap de 149 à 399 DH. Livraison gratuite partout au Maroc.',
       seo: {canonicalPath: '/boutique'},
     },
     faq: {

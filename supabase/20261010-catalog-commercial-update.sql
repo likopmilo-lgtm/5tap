@@ -20,14 +20,14 @@ on conflict (id) do update set
 
 insert into public.site_settings(key,value) values
   ('defaultTitle','"5Tap — Cartes de visite digitales NFC et Google Review"'),
-  ('defaultDescription','"Cartes de visite digitales NFC dès 179 DH et supports Google Review dès 149 DH. Livraison incluse partout au Maroc."'),
+  ('defaultDescription','"Cartes de visite digitales NFC dès 179 DH et supports Google Review dès 149 DH. Livraison gratuite partout au Maroc."'),
   ('tangierShipping','0'),
   ('moroccoShipping','0')
 on conflict(key) do update set value=excluded.value,updated_at=now();
 
 insert into public.content_pages(slug,title,description,seo) values
-  ('home','5Tap — Cartes de visite digitales NFC et Google Review','Cartes de visite digitales NFC dès 179 DH et supports Google Review dès 149 DH. Livraison incluse partout au Maroc.','{"canonicalPath":"/"}'),
-  ('shop','Boutique NFC — Cartes de visite et Google Review','Comparez les cartes de visite digitales NFC et les supports Google Review 5Tap de 149 à 399 DH. Livraison incluse partout au Maroc.','{"canonicalPath":"/boutique"}'),
+  ('home','5Tap — Cartes de visite digitales NFC et Google Review','Cartes de visite digitales NFC dès 179 DH et supports Google Review dès 149 DH. Livraison gratuite partout au Maroc.','{"canonicalPath":"/"}'),
+  ('shop','Boutique NFC — Cartes de visite et Google Review','Comparez les cartes de visite digitales NFC et les supports Google Review 5Tap de 149 à 399 DH. Livraison gratuite partout au Maroc.','{"canonicalPath":"/boutique"}'),
   ('faq','FAQ 5Tap','Réponses sur les cartes NFC, la personnalisation, le paiement et la livraison au Maroc.','{"canonicalPath":"/faq"}'),
   ('contact','Contact 5Tap','Contactez 5Tap sur WhatsApp pour une carte NFC, un support Google Review ou une démonstration.','{"canonicalPath":"/contact"}')
 on conflict(slug) do update set title=excluded.title,description=excluded.description,seo=excluded.seo,updated_at=now();
@@ -40,7 +40,7 @@ insert into public.faqs(question,answer,sort_order) values
   ('Avec quels téléphones les produits sont-ils compatibles ?','Ils fonctionnent avec les iPhone et smartphones Android récents compatibles NFC. La zone de lecture varie selon le modèle. Le QR code reste disponible comme alternative.',40),
   ('Faut-il installer une application ?','Non. Aucune application 5Tap n’est nécessaire pour ouvrir une carte ou un stand. Une connexion Internet est nécessaire pour afficher la destination.',50),
   ('Quels sont les prix et les conditions de paiement ?','Les cartes de visite digitales commencent à 179 DH et la gamme Google Review à 149 DH. Les produits standard sont payés à la livraison. Une avance est demandée avant la préparation des produits personnalisés ; son montant et son moyen de paiement sont confirmés avec vous.',60),
-  ('Quels sont les délais de préparation et de livraison ?','La livraison est incluse partout au Maroc. Un produit standard est livré sous 2 jours maximum. Pour un produit personnalisé, comptez 1 à 2 jours de préparation après validation du visuel et réception de l’avance, puis 2 jours maximum pour la livraison.',70),
+  ('Quels sont les délais de préparation et de livraison ?','La livraison est gratuite partout au Maroc. Un produit standard est livré sous 2 jours maximum. Pour un produit personnalisé, comptez 1 à 2 jours de préparation après validation du visuel et réception de l’avance, puis 2 jours maximum pour la livraison.',70),
   ('Comment transmettre mon logo pour un produit personnalisé ?','Après votre commande, notre équipe vous contacte sur WhatsApp pour recevoir votre logo et vos informations. Nous vous envoyons un visuel à valider avant de commencer la préparation.',80),
   ('Puis-je choisir la destination de ma carte de visite ?','Oui. La carte peut ouvrir un profil regroupant vos coordonnées et vos liens, WhatsApp directement, Instagram directement ou un autre lien de votre choix.',90),
   ('Puis-je modifier moi-même mes coordonnées plus tard ?','L’espace client permettant de modifier soi-même ses coordonnées est prévu pour une deuxième phase et n’est pas encore disponible. Contactez 5Tap pour connaître les possibilités de mise à jour actuellement proposées.',100),
