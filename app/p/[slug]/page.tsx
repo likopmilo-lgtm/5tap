@@ -21,20 +21,20 @@ export default async function Page({params}:{params:Promise<{slug:string}>}){
  const socials=[...storedSocials,...legacySocials].filter(item=>item?.url&&item.platform!=='instagram').map((item,index)=>({href:socialHref(item.platform,item.url),icon:socialIcon(item.platform),label:item.label||item.platform,key:`${item.platform}-${index}`})).filter(item=>item.href);
  const mapLink=mapsUrl(p);
  const hasLocation=Boolean(mapLink);const locationLabel=p.address||'Voir la localisation';
- const details=[p.phone&&{href:`tel:${p.phone}`,icon:<Phone/>,label:'Téléphone',value:p.phone},p.whatsapp&&{href:whatsappUrl(p.whatsapp),icon:<WhatsAppIcon/>,label:'WhatsApp',value:'Écrire maintenant'},p.email&&{href:`mailto:${p.email}`,icon:<Mail/>,label:'Email',value:p.email},p.website&&{href:externalUrl(p.website),icon:<Globe/>,label:'Site web',value:p.website.replace(/^https?:\/\//,'')},p.custom_url&&{href:externalUrl(p.custom_url),icon:<Globe/>,label:p.custom_label||'Autre lien',value:'Ouvrir'}].filter(Boolean) as {href:string;icon:ReactNode;label:string;value:string}[];
+ const details=[p.email&&{href:`mailto:${p.email}`,icon:<Mail/>,label:'Email',value:p.email},p.website&&{href:externalUrl(p.website),icon:<Globe/>,label:'Site web',value:p.website.replace(/^https?:\/\//,'')},p.custom_url&&{href:externalUrl(p.custom_url),icon:<Globe/>,label:p.custom_label||'Autre lien',value:'Ouvrir'}].filter(Boolean) as {href:string;icon:ReactNode;label:string;value:string}[];
  return <main className="public-profile-page"><section className="public-profile-shell">
   <div className="public-profile-cover"><div className="public-profile-top"><img src="/logo-5tap.png" width="110" height="44" alt="5Tap"/><span>PROFIL DIGITAL</span></div></div>
   <div className="public-profile-avatar">{p.avatar_data_url?<img src={p.avatar_data_url} alt={`Photo de ${p.display_name}`}/>:initials||'5T'}</div>
-  <div className="public-profile-identity"><h1>{p.display_name}</h1><p className="public-profile-role">{[p.job_title,p.company].filter(Boolean).join(' · ')}</p>{p.bio&&<p className="public-profile-bio">{p.bio}</p>}</div>
+  <div className="public-profile-identity"><h1>{p.display_name}</h1><p className="public-profile-role">{[p.job_title,p.company].filter(Boolean).join(' · ')}</p>{p.address&&<p className="public-profile-city"><MapPin/>{p.address}</p>}{p.bio&&<p className="public-profile-bio">{p.bio}</p>}</div>
   <SaveContact slug={p.public_slug} photo={p.avatar_data_url||''}/>
   {(p.phone||p.whatsapp||instagramLink)&&<div className="public-quick-actions" aria-label="Contacter et suivre">
    {p.phone&&<a className="profile-action-call" href={`tel:${p.phone}`}><span><Phone/></span><small>Appeler</small></a>}
    {p.whatsapp&&<a className="profile-action-whatsapp" href={whatsappUrl(p.whatsapp)} target="_blank" rel="noreferrer"><span><WhatsAppIcon/></span><small>WhatsApp</small></a>}
    {instagramLink&&<a className="profile-action-instagram" href={instagramLink} target="_blank" rel="noreferrer"><span><InstagramIcon/></span><small>Instagram</small></a>}
   </div>}
+  <div className="public-profile-links">{details.map(link=><a href={link.href} key={link.label} target={link.href.startsWith('http')?'_blank':undefined} rel="noreferrer"><span>{link.icon}</span><span><small>{link.label}</small><strong>{link.value}</strong></span></a>)}</div>
   {hasLocation&&<a className="public-location-action" href={mapLink} target="_blank" rel="noreferrer"><MapPin/>Itinéraire</a>}
   {socials.length>0&&<div className="public-socials" aria-label="Autres réseaux sociaux">{socials.map(item=><a href={item.href} key={item.key} target="_blank" rel="noreferrer" aria-label={item.label}>{item.icon}<small>{item.label}</small></a>)}</div>}
-  <div className="public-profile-links">{details.map(link=><a href={link.href} key={link.label} target={link.href.startsWith('http')?'_blank':undefined} rel="noreferrer"><span>{link.icon}</span><span><small>{link.label}</small><strong>{link.value}</strong></span></a>)}</div>
   {hasLocation&&<div className="public-map-card"><div><MapPin/><span><small>LOCALISATION</small><strong>{locationLabel}</strong></span></div><a href={mapLink} target="_blank" rel="noreferrer">Ouvrir dans Google Maps</a></div>}
   <footer>Profil digital créé avec <strong>5Tap</strong></footer>
  </section></main>

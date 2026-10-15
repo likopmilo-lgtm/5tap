@@ -177,6 +177,7 @@ html[dir="rtl"] .nav,html[dir="rtl"] .actions,html[dir="rtl"] .checks,html[dir="
 .public-quick-actions a:hover>span,.profile-device .profile-quick-actions a:hover>span{transform:translateY(-2px);filter:brightness(1.12)}
 .public-quick-actions a:focus-visible,.public-save-contact:focus-visible,.public-location-action:focus-visible{outline:2px solid #e1c35f;outline-offset:4px}
 .public-location-action{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;margin:-8px 0 18px;font-size:12px;color:#dfc262}.public-location-action svg{width:18px;height:18px}
+.public-profile-city,.profile-preview-city{display:flex;align-items:center;justify-content:center;gap:6px;margin:9px auto 18px;font-size:12px;line-height:1.5;color:#aaa69c;overflow-wrap:anywhere}.public-profile-city svg,.profile-preview-city svg{width:14px;height:14px;flex-shrink:0;color:#d4af37}
 .profile-device .profile-quick-actions a>span{width:54px;height:54px;border-radius:16px}.profile-device .profile-quick-actions a>span svg{width:28px;height:28px}.profile-device .profile-quick-actions a small{margin-top:8px;font-size:11px}
 @media(max-width:360px){.public-quick-actions{gap:6px}.public-quick-actions a>span{width:56px;height:56px}.public-quick-actions small{font-size:11px}}
 
