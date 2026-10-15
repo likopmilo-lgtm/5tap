@@ -2,7 +2,7 @@ import type {PublicCardProfile} from './card-profile';
 
 function escapeValue(value:string){return value.replace(/\\/g,'\\\\').replace(/\r\n|\r|\n/g,'\\n').replace(/([,;])/g,'\\$1')}
 
-// vCard 3.0 uses CRLF and continuation lines of at most 75 UTF-8 octets.
+// Fold text at 75 UTF-8 octets. PHOTO is serialized separately below.
 function foldLine(value:string){
  const lines:string[]=[];let line='',bytes=0;
  for(const char of value){
@@ -35,10 +35,15 @@ export function buildContactVCard(profile:PublicCardProfile,photo=profile.avatar
  if(profile.website)lines.push(`URL:${v(profile.website)}`);
  if(profile.address)lines.push(`ADR;TYPE=WORK:;;${v(profile.address)};;;;`);
  if(profile.bio)lines.push(`NOTE:${v(profile.bio)}`);
+ lines.push(`URL:https://5tap.ma/p/${profile.public_slug}`);
+ let card=lines.map(foldLine).join('\r\n')+'\r\n';
  const image=contactPhoto(photo);
- if(image)lines.push(`PHOTO;ENCODING=b;TYPE=${image.type}:${image.data}`);
- lines.push(`URL:https://5tap.ma/p/${profile.public_slug}`,'END:VCARD');
- return lines.map(foldLine).join('\r\n')+'\r\n';
+ // Some Android contact handoffs treat folded binary continuations as contact
+ // text. Keep PHOTO on one physical line so its payload cannot become an
+ // address or note. Text still uses normal vCard folding; PHOTO comes last,
+ // with the explicit empty-line terminator also used by Android's exporter.
+ if(image)card+=`PHOTO;ENCODING=b;TYPE=${image.type}:${image.data}\r\n\r\n`;
+ return card+'END:VCARD\r\n';
 }
 
 export function contactFilename(name:string){return (name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()||'contact-5tap')+'.vcf'}
