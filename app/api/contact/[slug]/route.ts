@@ -1,18 +1,20 @@
 import {getPublicCardProfile} from '../../../card-profile';
+import {buildContactVCard,contactFilename,contactPhoto} from '../../../contact-vcard';
 
-function v(value:string){return value.replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/([,;])/g,'\\$1')}
-export async function GET(_request:Request,{params}:{params:Promise<{slug:string}>}){
+type Context={params:Promise<{slug:string}>};
+async function download({params}:Context,photo?:string){
  const{slug}=await params;const profile=await getPublicCardProfile(slug);if(!profile)return new Response('Profil introuvable',{status:404});
- const lines=['BEGIN:VCARD','VERSION:3.0',`FN:${v(profile.display_name)}`];
- if(profile.company)lines.push(`ORG:${v(profile.company)}`);
- if(profile.job_title)lines.push(`TITLE:${v(profile.job_title)}`);
- if(profile.phone)lines.push(`TEL;TYPE=CELL:${v(profile.phone)}`);
- if(profile.whatsapp&&profile.whatsapp!==profile.phone)lines.push(`TEL;TYPE=CELL:${v(profile.whatsapp)}`);
- if(profile.email)lines.push(`EMAIL;TYPE=INTERNET:${v(profile.email)}`);
- if(profile.website)lines.push(`URL:${v(profile.website)}`);
- if(profile.address)lines.push(`ADR;TYPE=WORK:;;${v(profile.address)};;;;`);
- if(profile.bio)lines.push(`NOTE:${v(profile.bio)}`);
- lines.push(`URL:https://5tap.ma/p/${profile.public_slug}`,'END:VCARD');
- const safeName=profile.display_name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()||'contact-5tap';
- return new Response(lines.join('\r\n'),{headers:{'Content-Type':'text/vcard; charset=utf-8','Content-Disposition':`attachment; filename="${safeName}.vcf"`,'Cache-Control':'public, max-age=300'}});
+ return new Response(buildContactVCard(profile,photo),{headers:{'Content-Type':'text/vcard; charset=utf-8','Content-Disposition':`attachment; filename="${contactFilename(profile.display_name)}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+}
+
+export async function GET(_request:Request,context:Context){return download(context)}
+
+export async function POST(request:Request,context:Context){
+ if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return new Response('Origine non autorisée.',{status:403});
+ if(Number(request.headers.get('content-length')||0)>600000)return new Response('Photo trop volumineuse.',{status:413});
+ if(!request.headers.get('content-type')?.startsWith('application/x-www-form-urlencoded'))return new Response('Format invalide.',{status:415});
+ const body=await request.text();if(body.length>600000)return new Response('Photo trop volumineuse.',{status:413});
+ const photo=new URLSearchParams(body).get('photo')||'';
+ const image=contactPhoto(photo);if(!image||!['JPEG','PNG'].includes(image.type))return new Response('Photo invalide.',{status:400});
+ return download(context,photo);
 }
