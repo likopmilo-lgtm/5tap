@@ -1,6 +1,7 @@
 import {quotePromo,PromoError} from '../../promotions';
 import {env} from 'cloudflare:workers';
 import {getSiteData, hasSupabaseConfig, writeSupabase} from '../../supabase-server';
+import {deliveryFee,orderTotals} from '../../pricing';
 function fail(message:string,status=400){return Response.json({error:message},{status})}
 export async function POST(request:Request){
  try{
@@ -12,10 +13,10 @@ export async function POST(request:Request){
   for(const key of ['id','name','phone','city','address','notes'])if(typeof b[key]!=='string')return fail('Veuillez vérifier vos coordonnées.');
   if(!/^[0-9a-f-]{36}$/i.test(b.id)||b.name.trim().length<2||b.name.length>100||b.city.trim().length<2||b.city.length>100||b.address.trim().length<8||b.address.length>500||b.notes.length>1000||!/^\+?[0-9\s()-]{9,20}$/.test(b.phone))return fail('Veuillez vérifier votre nom, téléphone et ville.');
   if(b.website)return fail('Commande non acceptée.');
-  if(!Array.isArray(b.items)||b.items.length<1||b.items.length>5)return fail('Votre panier est vide ou invalide.');
+  if(!Array.isArray(b.items)||b.items.length<1||b.items.length>50)return fail('Votre panier est vide ou invalide.');
   const site=await getSiteData();const products=site.products;const ids=new Set();const items=[];
   for(const item of b.items){const p=products.find(p=>p.id===item?.id||p.slug===item?.id);if(!p||ids.has(p.id)||!Number.isInteger(item.quantity)||item.quantity<1||item.quantity>50)return fail('Quantité ou produit invalide.');ids.add(p.id);items.push({id:p.id,name:p.name,price:p.price,quantity:item.quantity});}
-  const subtotal=items.reduce((s,p)=>s+p.price*p.quantity,0);const city=b.city.trim();const shipping=0;const promo=await quotePromo(b.promoCode,subtotal);const total=Math.round((subtotal-promo.discount)*100)/100;const orderNotes=[b.notes.trim(),...(promo.code?[`Code promo : ${promo.code} | Remise : ${promo.discount} DH`]:[])].filter(Boolean).join("\n");
+  const subtotal=items.reduce((s,p)=>s+p.price*p.quantity,0);const city=b.city.trim();const shipping=deliveryFee(site.settings,city);const promo=await quotePromo(b.promoCode,subtotal);const {total}=orderTotals(subtotal,shipping,promo.discount);const orderNotes=[b.notes.trim(),...(promo.code?[`Code promo : ${promo.code} | Remise : ${promo.discount} DH`]:[])].filter(Boolean).join("\n");
   let row:any=null;
   if(hasSupabaseConfig()){
    const order={id:b.id,name:b.name.trim(),phone:b.phone.trim(),city,address:b.address.trim(),items,subtotal,shipping,total,notes:orderNotes,status:'awaiting_whatsapp_confirmation',source:'website',created_at:new Date().toISOString()};
@@ -29,6 +30,6 @@ export async function POST(request:Request){
   // A repeated request may only retrieve its own exact payload; never disclose an existing order.
   const storedItems=typeof row.items==='string'?row.items:JSON.stringify(row.items);
   if(row.name!==b.name.trim()||row.phone!==b.phone.trim()||row.address!==b.address.trim()||row.city!==city||storedItems!==JSON.stringify(items)||row.notes!==orderNotes)return fail('Cette référence a déjà été utilisée. Rechargez la page pour une nouvelle commande.',409);
-  return Response.json({id:row.id,total,shipping,discount:promo.discount,promoCode:promo.code},{status:201,headers:{'Cache-Control':'no-store'}});
+  return Response.json({id:row.id,items,subtotal,total,shipping,discount:promo.discount,promoCode:promo.code},{status:201,headers:{'Cache-Control':'no-store'}});
  }catch(error){if(error instanceof PromoError)return fail(error.message);console.error('order_failed',error instanceof Error?error.message:'Unknown');return fail('Votre commande n’a pas pu être confirmée. Vos informations sont conservées à l’écran. Réessayez ou contactez-nous sur WhatsApp.',503)}
 }

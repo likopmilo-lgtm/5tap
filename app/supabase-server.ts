@@ -64,6 +64,7 @@ function normalizeProduct(row: Record<string, unknown>): SiteProduct {
     slug: id,
     name: String(row.name || id),
     price: Number(row.price || 0),
+    compareAtPrice: Number(row.compare_at_price ?? metadata.compareAtPrice) || undefined,
     category: String(row.category || 'packs'),
     label: String(row.label || ''),
     desc: String(row.description || row.desc || ''),

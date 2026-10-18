@@ -485,3 +485,53 @@ Object.assign(es, {'Une offre nationale. À vos côtés.':'Una oferta nacional. 
 Object.assign(en, {'Activer ma carte':'Activate my card','Aide':'Help','Trouver mon produit':'Find my product','Choisir ma carte NFC':'Choose my NFC card','Je veux collecter des avis Google':'I want more Google reviews','Choisir ce produit':'Choose this product','Quel est votre objectif ?':'What is your goal?','Choisissez votre besoin pour voir uniquement les produits utiles.':'Choose your goal to see only the relevant products.','Je partage mes coordonnées':'I share my contact details','Carte digitale NFC · dès 179 DH':'Digital NFC card · from MAD 179','Je collecte des avis Google':'I collect Google reviews','Cartes et stands NFC · dès 149 DH':'NFC cards and stands · from MAD 149','Afficher tous les produits':'Show all products','Tous les produits':'All products','produits':'products'});
 Object.assign(ar, {'Activer ma carte':'فعّل الكارطة ديالي','Aide':'المساعدة','Trouver mon produit':'نلقى المنتوج ديالي','Choisir ma carte NFC':'نختار كارطة NFC','Je veux collecter des avis Google':'بغيت نجمع آراء Google','Choisir ce produit':'نختار هاد المنتوج','Quel est votre objectif ?':'شنو الهدف ديالك؟','Choisissez votre besoin pour voir uniquement les produits utiles.':'اختار الحاجة ديالك باش يبانوا غير المنتوجات المناسبة.','Je partage mes coordonnées':'نشارك معلومات التواصل ديالي','Carte digitale NFC · dès 179 DH':'كارطة ديجيتال NFC · من 179 درهم','Je collecte des avis Google':'نجمع آراء Google','Cartes et stands NFC · dès 149 DH':'كارطات وستاندات NFC · من 149 درهم','Afficher tous les produits':'بين جميع المنتوجات','Tous les produits':'جميع المنتوجات','produits':'منتوجات'});
 Object.assign(es, {'Activer ma carte':'Activar mi tarjeta','Aide':'Ayuda','Trouver mon produit':'Encontrar mi producto','Choisir ma carte NFC':'Elegir mi tarjeta NFC','Je veux collecter des avis Google':'Quiero conseguir reseñas Google','Choisir ce produit':'Elegir este producto','Quel est votre objectif ?':'¿Cuál es tu objetivo?','Choisissez votre besoin pour voir uniquement les produits utiles.':'Elige tu objetivo para ver solo los productos adecuados.','Je partage mes coordonnées':'Comparto mis datos','Carte digitale NFC · dès 179 DH':'Tarjeta digital NFC · desde 179 DH','Je collecte des avis Google':'Consigo reseñas Google','Cartes et stands NFC · dès 149 DH':'Tarjetas y soportes NFC · desde 149 DH','Afficher tous les produits':'Mostrar todos los productos','Tous les produits':'Todos los productos','produits':'productos'});
+
+// Current promotion and per-order delivery, shared by all storefront views.
+Object.assign(en, {
+  "Offre spéciale : −40 DH": "Special offer: MAD 40 off",
+  "Livraison :": "Delivery:",
+  "partout au Maroc": "across Morocco",
+  "Ancien prix :": "Previous price:",
+  "Vous économisez": "You save",
+  "sur les produits": "on products",
+  "Carte digitale NFC · dès": "Digital NFC card · from",
+  "Cartes et stands NFC · dès": "NFC cards and stands · from",
+  "La livraison coûte": "Delivery costs",
+  "par commande partout au Maroc.": "per order across Morocco.",
+  "Illustrations de présentation de la gamme 5Tap.": "5Tap range preview images.",
+  "Les produits standard sont payés à la livraison et livrés sous 2 jours maximum. Pour les produits personnalisés, une avance est requise avant préparation ; son montant et son moyen de paiement sont confirmés avec vous. La préparation dure 1 à 2 jours après validation du visuel et réception de l’avance, puis la livraison prend 2 jours maximum.": "Standard products are paid on delivery and delivered within 2 days. Custom products require an advance before preparation; its amount and payment method are confirmed with you. Preparation takes 1–2 days after design approval and receipt of the advance, followed by delivery within 2 days.",
+  "Pendant la promotion, les cartes de visite digitales commencent à 139 DH et la gamme Google Review à 109 DH, soit 40 DH de réduction sur chaque carte et pack. La livraison coûte 35 DH par commande partout au Maroc. Les produits standard sont payés à la livraison. Une avance est demandée avant la préparation des produits personnalisés ; son montant et son moyen de paiement sont confirmés avec vous.": "During the promotion, digital business cards start at MAD 139 and the Google Review range at MAD 109: MAD 40 off every card and pack. Delivery costs MAD 35 per order across Morocco. Standard products are paid on delivery. Custom products require an advance before preparation; its amount and payment method are confirmed with you.",
+  "La livraison coûte 35 DH par commande partout au Maroc. Un produit standard est livré sous 2 jours maximum. Pour un produit personnalisé, comptez 1 à 2 jours de préparation après validation du visuel et réception de l’avance, puis 2 jours maximum pour la livraison.": "Delivery costs MAD 35 per order across Morocco. Standard products are delivered within 2 days. Custom products need 1–2 days of preparation after design approval and receipt of the advance, followed by delivery within 2 days."
+});
+Object.assign(ar, {
+  "Offre spéciale : −40 DH": "عرض خاص: نقصنا 40 درهم",
+  "Livraison :": "التوصيل:",
+  "partout au Maroc": "فالمغرب كامل",
+  "Ancien prix :": "الثمن القديم:",
+  "Vous économisez": "كتوفّر",
+  "sur les produits": "فالمنتوجات",
+  "Carte digitale NFC · dès": "كارطة ديجيتال NFC · من",
+  "Cartes et stands NFC · dès": "كارطات وستاندات NFC · من",
+  "La livraison coûte": "ثمن التوصيل هو",
+  "par commande partout au Maroc.": "لكل طلبية فالمغرب كامل.",
+  "Illustrations de présentation de la gamme 5Tap.": "صور تقديمية لمنتوجات 5Tap.",
+  "Les produits standard sont payés à la livraison et livrés sous 2 jours maximum. Pour les produits personnalisés, une avance est requise avant préparation ; son montant et son moyen de paiement sont confirmés avec vous. La préparation dure 1 à 2 jours après validation du visuel et réception de l’avance, puis la livraison prend 2 jours maximum.": "المنتوجات ستاندار كتخلص عند التوصيل وكتوصل فنهارين كحد أقصى. المنتوجات المخصصة خاصها تسبيق قبل التحضير؛ المبلغ والطريقة كنأكدوهم معاك. التحضير كياخد من نهار لنهارين من بعد تأكيد التصميم والتسبيق، ومن بعد التوصيل فنهارين كحد أقصى.",
+  "Pendant la promotion, les cartes de visite digitales commencent à 139 DH et la gamme Google Review à 109 DH, soit 40 DH de réduction sur chaque carte et pack. La livraison coûte 35 DH par commande partout au Maroc. Les produits standard sont payés à la livraison. Une avance est demandée avant la préparation des produits personnalisés ; son montant et son moyen de paiement sont confirmés avec vous.": "فهاد العرض، كارطات الزيارة الديجيتال كيبداو من 139 درهم ومنتوجات Google Review من 109 درهم، يعني نقصنا 40 درهم من كل كارطة وپاك. التوصيل بـ35 درهم لكل طلبية فالمغرب كامل. المنتوجات ستاندار كتخلص عند التوصيل. فالمنتوجات المخصصة خاص تسبيق قبل التحضير؛ المبلغ وطريقة الخلاص كنأكدوهم معاك.",
+  "La livraison coûte 35 DH par commande partout au Maroc. Un produit standard est livré sous 2 jours maximum. Pour un produit personnalisé, comptez 1 à 2 jours de préparation après validation du visuel et réception de l’avance, puis 2 jours maximum pour la livraison.": "التوصيل بـ35 درهم لكل طلبية فالمغرب كامل. المنتوج ستاندار كيوصل فنهارين كحد أقصى. المنتوج المخصص كياخد من نهار لنهارين فالتحضير من بعد تأكيد التصميم والتسبيق، ومن بعد التوصيل فنهارين كحد أقصى."
+});
+Object.assign(es, {
+  "Offre spéciale : −40 DH": "Oferta especial: 40 DH de descuento",
+  "Livraison :": "Entrega:",
+  "partout au Maroc": "en todo Marruecos",
+  "Ancien prix :": "Precio anterior:",
+  "Vous économisez": "Ahorras",
+  "sur les produits": "en los productos",
+  "Carte digitale NFC · dès": "Tarjeta digital NFC · desde",
+  "Cartes et stands NFC · dès": "Tarjetas y soportes NFC · desde",
+  "La livraison coûte": "La entrega cuesta",
+  "par commande partout au Maroc.": "por pedido en todo Marruecos.",
+  "Illustrations de présentation de la gamme 5Tap.": "Imágenes de presentación de la gama 5Tap.",
+  "Les produits standard sont payés à la livraison et livrés sous 2 jours maximum. Pour les produits personnalisés, une avance est requise avant préparation ; son montant et son moyen de paiement sont confirmés avec vous. La préparation dure 1 à 2 jours après validation du visuel et réception de l’avance, puis la livraison prend 2 jours maximum.": "Los productos estándar se pagan contra entrega y llegan en 2 días como máximo. Los personalizados requieren un anticipo antes de la preparación; confirmamos su importe y método contigo. La preparación tarda 1–2 días tras aprobar el diseño y recibir el anticipo, seguida de una entrega de hasta 2 días.",
+  "Pendant la promotion, les cartes de visite digitales commencent à 139 DH et la gamme Google Review à 109 DH, soit 40 DH de réduction sur chaque carte et pack. La livraison coûte 35 DH par commande partout au Maroc. Les produits standard sont payés à la livraison. Une avance est demandée avant la préparation des produits personnalisés ; son montant et son moyen de paiement sont confirmés avec vous.": "Durante la promoción, las tarjetas digitales empiezan en 139 DH y la gama Google Review en 109 DH: 40 DH de descuento por tarjeta y pack. La entrega cuesta 35 DH por pedido en todo Marruecos. Los productos estándar se pagan contra entrega. Los personalizados requieren un anticipo antes de la preparación; confirmamos su importe y método contigo.",
+  "La livraison coûte 35 DH par commande partout au Maroc. Un produit standard est livré sous 2 jours maximum. Pour un produit personnalisé, comptez 1 à 2 jours de préparation après validation du visuel et réception de l’avance, puis 2 jours maximum pour la livraison.": "La entrega cuesta 35 DH por pedido en todo Marruecos. Un producto estándar llega en un máximo de 2 días. Los personalizados necesitan 1–2 días de preparación tras aprobar el diseño y recibir el anticipo, y después hasta 2 días de entrega."
+});

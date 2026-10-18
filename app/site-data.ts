@@ -1,5 +1,6 @@
 import {studioMedia} from './product-media';
 import {faqs as fallbackFaqs, products as fallbackProducts, whatsapp} from './catalog';
+import {hasCurrentCatalog} from './pricing';
 
 export type ProductImage = {
   url: string;
@@ -24,6 +25,7 @@ export type SiteProduct = {
   id: string;
   name: string;
   price: number;
+  compareAtPrice?: number;
   category: string;
   label: string;
   desc: string;
@@ -54,6 +56,7 @@ export type SiteSettings = {
   currency: string;
   tangierShipping: number;
   moroccoShipping: number;
+  promotionHeadline?: string;
 };
 
 export type SiteData = {
@@ -71,10 +74,11 @@ export const fallbackSettings: SiteSettings = {
   instagramUrl: 'https://www.instagram.com/5tap.ma/',
   defaultTitle: '5Tap — Cartes de visite digitales et avis Google',
   defaultDescription:
-    'Cartes de visite digitales NFC dès 179 DH et supports Google Review dès 149 DH. Livraison gratuite partout au Maroc.',
+    'Offre spéciale 5Tap : cartes de visite digitales NFC dès 139 DH et Google Review dès 109 DH. Livraison à 35 DH partout au Maroc.',
   currency: 'MAD',
-  tangierShipping: 0,
-  moroccoShipping: 0,
+  tangierShipping: 35,
+  moroccoShipping: 35,
+  promotionHeadline: 'Offre spéciale : −40 DH',
 };
 
 export const fallbackSiteData: SiteData = {
@@ -130,7 +134,7 @@ export const fallbackSiteData: SiteData = {
     shop: {
       title: 'Boutique NFC — Cartes et packs',
       description:
-        'Comparez les cartes de visite digitales NFC et les supports Google Review 5Tap de 149 à 399 DH. Livraison gratuite partout au Maroc.',
+        '40 DH de réduction sur les cartes et packs NFC 5Tap : de 109 à 359 DH. Livraison à 35 DH partout au Maroc.',
       seo: {canonicalPath: '/boutique'},
     },
     faq: {
@@ -149,8 +153,7 @@ export const fallbackSiteData: SiteData = {
 export function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData {
   if (!data) data = fallbackSiteData;
   const incoming = Array.isArray(data.products) ? data.products : [];
-  const catalogIsCurrent = incoming.some(item => item.id === 'carte-visite-personnalisee' || item.slug === 'carte-visite-personnalisee') &&
-    incoming.some(item => item.id === 'carte-visite' && item.price === 179);
+  const catalogIsCurrent = hasCurrentCatalog(incoming);
   const canonicalProducts = fallbackSiteData.products.map(canonical => {
     const remote = incoming.find(item => item.id === canonical.id || item.slug === canonical.id);
     if (!remote) return withStudioMedia(canonical);
@@ -160,6 +163,7 @@ export function normalizeSiteData(data: Partial<SiteData> | null | undefined): S
       slug: canonical.id,
       name: canonical.name,
       price: canonical.price,
+      compareAtPrice: canonical.compareAtPrice,
       category: canonical.category,
       label: canonical.label,
       desc: canonical.desc,
@@ -189,8 +193,8 @@ export function normalizeSiteData(data: Partial<SiteData> | null | undefined): S
       ...(data.settings || {}),
       defaultTitle: fallbackSiteData.settings.defaultTitle,
       defaultDescription: fallbackSiteData.settings.defaultDescription,
-      tangierShipping: 0,
-      moroccoShipping: 0,
+      tangierShipping: fallbackSiteData.settings.tangierShipping,
+      moroccoShipping: fallbackSiteData.settings.moroccoShipping,
     },
     pages: catalogIsCurrent ? {...fallbackSiteData.pages, ...(data.pages || {})} : canonicalPages,
   };
