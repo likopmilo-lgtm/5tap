@@ -74,11 +74,10 @@ export const fallbackSettings: SiteSettings = {
   instagramUrl: 'https://www.instagram.com/5tap.ma/',
   defaultTitle: '5Tap — Cartes de visite digitales et avis Google',
   defaultDescription:
-    'Offre spéciale 5Tap : cartes de visite digitales NFC dès 139 DH et Google Review dès 109 DH. Livraison à 35 DH partout au Maroc.',
+    'Cartes de visite digitales NFC dès 179 DH et Google Review dès 149 DH. Livraison gratuite partout au Maroc. Découvrez les cartes et packs 5Tap.',
   currency: 'MAD',
-  tangierShipping: 35,
-  moroccoShipping: 35,
-  promotionHeadline: 'PROMO 5TAP : −40 DH sur les cartes et packs',
+  tangierShipping: 0,
+  moroccoShipping: 0,
 };
 
 export const fallbackSiteData: SiteData = {
@@ -134,7 +133,7 @@ export const fallbackSiteData: SiteData = {
     shop: {
       title: 'Boutique NFC — Cartes et packs',
       description:
-        '40 DH de réduction sur les cartes et packs NFC 5Tap : de 109 à 359 DH. Livraison à 35 DH partout au Maroc.',
+        'Cartes de visite NFC dès 179 DH, cartes Google Review dès 149 DH et packs dès 249 DH. Livraison gratuite partout au Maroc.',
       seo: {canonicalPath: '/boutique'},
     },
     faq: {
@@ -163,7 +162,7 @@ export function normalizeSiteData(data: Partial<SiteData> | null | undefined): S
       slug: canonical.id,
       name: canonical.name,
       price: canonical.price,
-      compareAtPrice: canonical.compareAtPrice,
+      compareAtPrice: undefined,
       category: canonical.category,
       label: canonical.label,
       desc: canonical.desc,

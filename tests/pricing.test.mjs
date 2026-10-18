@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {products} from '../app/catalog.ts';
 import {compareAtPrice,deliveryFee,hasCurrentCatalog,orderTotals,orderWhatsAppText} from '../app/pricing.ts';
 
-test('all six cards and packs have the approved price minus 40 DH',()=>{
- const expected={'carte-visite':[179,139],'carte-visite-personnalisee':[249,209],'carte-google':[149,109],essentiel:[249,209],pro:[299,259],prestige:[399,359]};
- for(const p of products){assert.deepEqual([compareAtPrice(p),p.price],expected[p.id]);assert.equal(compareAtPrice(p)-p.price,40)}
+test('all six cards and packs have the approved fixed price without sale anchors',()=>{
+ const expected={'carte-visite':179,'carte-visite-personnalisee':249,'carte-google':149,essentiel:249,pro:299,prestige:399};
+ for(const p of products){assert.equal(p.price,expected[p.id]);assert.equal(compareAtPrice(p),undefined)}
 });
 
 test('Supabase remains authoritative when the standard-card price changes',()=>{
@@ -17,26 +17,27 @@ test('Supabase remains authoritative when the standard-card price changes',()=>{
  assert.equal(compareAtPrice({price:139}),undefined);
 });
 
-test('delivery costs 35 DH once per order in every city and quantity',()=>{
- const settings={tangierShipping:35,moroccoShipping:35};
+test('delivery is free in every city and quantity without changing merchandise totals',()=>{
+ const settings={tangierShipping:0,moroccoShipping:0};
  for(const city of ['','Tanger','TANGIER','طنجة','Casablanca','Rabat']){
-  for(const quantity of [1,2,50])assert.equal(orderTotals(139*quantity,deliveryFee(settings,city)).total,139*quantity+35);
+  for(const quantity of [1,2,50])assert.equal(orderTotals(179*quantity,deliveryFee(settings,city)).total,179*quantity);
  }
  const subtotal=products.reduce((sum,p)=>sum+p.price*2,0);
- assert.equal(orderTotals(subtotal,35).total,subtotal+35);
+ assert.equal(orderTotals(subtotal,0).total,subtotal);
+ assert.equal(deliveryFee({tangierShipping:NaN,moroccoShipping:NaN}),0);
+ assert.equal(deliveryFee({tangierShipping:10,moroccoShipping:20},'Tanger'),10);
 });
 
 test('collaboration discounts affect products only and preserve whole-dirham totals',()=>{
  // Existing STATI rule rounds the discounted merchandise total down.
- const subtotal=209,discount=subtotal-Math.floor(subtotal*.85);
- assert.deepEqual(orderTotals(subtotal,35,discount),{subtotal:209,shipping:35,discount:32,total:212});
- assert.equal(orderTotals(139,35,999).total,35);
+ const subtotal=249,discount=subtotal-Math.floor(subtotal*.85);
+ assert.deepEqual(orderTotals(subtotal,0,discount),{subtotal:249,shipping:0,discount:38,total:211});
+ assert.equal(orderTotals(179,0,999).total,0);
  assert.throws(()=>orderTotals(139,-35));assert.throws(()=>orderTotals(NaN,35));
 });
 
 test('WhatsApp uses the server-confirmed merchandise, shipping and final total',()=>{
- const text=orderWhatsAppText({reference:'5TAP-TEST',name:'Test',phone:'+212600000000',city:'Rabat',items:[{name:'Pack Essentiel',price:209,quantity:2}],subtotal:418,shipping:35,total:453,personalization:'Non',paymentTerms:'Paiement à la livraison.'});
- assert.ok(text.includes('Pack Essentiel × 2 — 418 DH'));
- assert.ok(text.includes('Sous-total : 418 DH\nLivraison : 35 DH\nTotal : 453 DH'));
- assert.ok(!/incluse|gratuite/i.test(text));
+ const text=orderWhatsAppText({reference:'5TAP-TEST',name:'Test',phone:'+212600000000',city:'Rabat',items:[{name:'Pack Essentiel',price:249,quantity:2}],subtotal:498,shipping:0,total:498,personalization:'Non',paymentTerms:'Paiement à la livraison.'});
+ assert.ok(text.includes('Pack Essentiel × 2 — 498 DH'));
+ assert.ok(text.includes('Sous-total : 498 DH\nLivraison : Gratuite\nTotal : 498 DH'));
 });
