@@ -535,3 +535,8 @@ Object.assign(es, {
   "Pendant la promotion, les cartes de visite digitales commencent à 139 DH et la gamme Google Review à 109 DH, soit 40 DH de réduction sur chaque carte et pack. La livraison coûte 35 DH par commande partout au Maroc. Les produits standard sont payés à la livraison. Une avance est demandée avant la préparation des produits personnalisés ; son montant et son moyen de paiement sont confirmés avec vous.": "Durante la promoción, las tarjetas digitales empiezan en 139 DH y la gama Google Review en 109 DH: 40 DH de descuento por tarjeta y pack. La entrega cuesta 35 DH por pedido en todo Marruecos. Los productos estándar se pagan contra entrega. Los personalizados requieren un anticipo antes de la preparación; confirmamos su importe y método contigo.",
   "La livraison coûte 35 DH par commande partout au Maroc. Un produit standard est livré sous 2 jours maximum. Pour un produit personnalisé, comptez 1 à 2 jours de préparation après validation du visuel et réception de l’avance, puis 2 jours maximum pour la livraison.": "La entrega cuesta 35 DH por pedido en todo Marruecos. Un producto estándar llega en un máximo de 2 días. Los personalizados necesitan 1–2 días de preparación tras aprobar el diseño y recibir el anticipo, y después hasta 2 días de entrega."
 });
+
+// Marketing ribbon; delivery remains itemised in the product and order views.
+Object.assign(en, {"PROMO 5TAP : −40 DH sur les cartes et packs":"5TAP SALE: MAD 40 off cards and packs"});
+Object.assign(ar, {"PROMO 5TAP : −40 DH sur les cartes et packs":"برومو 5TAP: نقصنا 40 درهم من الكارطات والپاكات"});
+Object.assign(es, {"PROMO 5TAP : −40 DH sur les cartes et packs":"PROMO 5TAP: 40 DH de descuento en tarjetas y packs"});

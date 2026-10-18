@@ -78,7 +78,7 @@ export const fallbackSettings: SiteSettings = {
   currency: 'MAD',
   tangierShipping: 35,
   moroccoShipping: 35,
-  promotionHeadline: 'Offre spéciale : −40 DH',
+  promotionHeadline: 'PROMO 5TAP : −40 DH sur les cartes et packs',
 };
 
 export const fallbackSiteData: SiteData = {

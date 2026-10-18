@@ -13,7 +13,7 @@ on conflict(id) do update set name=excluded.name,label=excluded.label,descriptio
 insert into public.site_settings(key,value) values
 ('tangierShipping','35'::jsonb),
 ('moroccoShipping','35'::jsonb),
-('promotionHeadline','"Offre spéciale : −40 DH"'::jsonb),
+('promotionHeadline','"PROMO 5TAP : −40 DH sur les cartes et packs"'::jsonb),
 ('defaultDescription','"Offre spéciale 5Tap : cartes de visite digitales NFC dès 139 DH et Google Review dès 109 DH. Livraison à 35 DH partout au Maroc."'::jsonb)
 on conflict(key) do update set value=excluded.value,updated_at=now();
 
