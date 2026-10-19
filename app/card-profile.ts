@@ -1,6 +1,7 @@
 import {writeSupabase} from './supabase-server';
 import {externalUrl,instagramUrl,whatsappUrl} from './profile-links';
 import type {PortfolioImage} from './profile-media';
+import type {ProfileDocument} from './profile-document';
 export {externalUrl,instagramUrl,mapsUrl,whatsappUrl} from './profile-links';
 
 export type SocialLink={platform:string;label:string;url:string};
@@ -11,6 +12,7 @@ export type PublicCardProfile={
  avatar_data_url:string;social_links:SocialLink[];
  cover_media_id?:string;cover_height?:number;cover_zoom?:number;cover_position_x?:number;cover_position_y?:number;
  portfolio_images?:PortfolioImage[];
+ cv_document?:ProfileDocument|null;
  destination_mode:'profile'|'whatsapp'|'instagram'|'custom';is_active:boolean;published_at:string|null;
 };
 

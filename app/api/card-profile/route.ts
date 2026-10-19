@@ -1,5 +1,6 @@
 import {writeSupabase} from '../../supabase-server';
 import {cleanPortfolio,coverNumber,imageData,mediaIdPattern} from '../../profile-media';
+import {cleanProfileDocument,PROFILE_REQUEST_MAX_BYTES} from '../../profile-document';
 
 const codePattern=/^5TAP-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
 const fields=['displayName','jobTitle','company','bio','phone','whatsapp','email','website','address','mapUrl','instagram','linkedin','facebook','customLabel','customUrl'] as const;
@@ -16,6 +17,8 @@ function cleanSocialLinks(value:unknown){
  })).filter(item=>item.url);
 }
 function toClient(row:Record<string,unknown>){
+ const document=row.cv_document?cleanProfileDocument(row.cv_document):null;
+ const cvDocument=document?{id:document.id,name:document.name,mimeType:document.mimeType,size:document.size,label:document.label}:null;
  const savedLinks=Array.isArray(row.social_links)?row.social_links:[];
  const legacy=savedLinks.length?savedLinks:[
   row.instagram&&{platform:'instagram',label:'Instagram',url:String(row.instagram)},
@@ -33,14 +36,16 @@ function toClient(row:Record<string,unknown>){
   coverHeight:coverNumber(row.cover_height,120,320,180),coverZoom:coverNumber(row.cover_zoom,100,200,100),
   coverPositionX:coverNumber(row.cover_position_x,0,100,50),coverPositionY:coverNumber(row.cover_position_y,0,100,50),
   portfolioImages:Array.isArray(row.portfolio_images)?row.portfolio_images:[],
+  cvDocument,
  };
 }
 
 export async function POST(request:Request){
  try{
   if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return fail('Origine non autorisée.',403);
-  if(Number(request.headers.get('content-length')||0)>2200000)return fail('Les images sont trop volumineuses.',413);
-  const raw=await request.text();if(raw.length>2200000)return fail('Les images sont trop volumineuses.',413);
+  if(Number(request.headers.get('content-length')||0)>PROFILE_REQUEST_MAX_BYTES)return fail('Le profil est trop volumineux. Réduisez la taille du document ou des images.',413);
+  const reader=request.body?.getReader();const decoder=new TextDecoder();let raw='',size=0;
+  if(reader){while(true){const chunk=await reader.read();if(chunk.done)break;size+=chunk.value.byteLength;if(size>PROFILE_REQUEST_MAX_BYTES){await reader.cancel();return fail('Le profil est trop volumineux. Réduisez la taille du document ou des images.',413)}raw+=decoder.decode(chunk.value,{stream:true})}raw+=decoder.decode()}
   const body=JSON.parse(raw);const code=clean(body.code,32).toUpperCase();const cardSlug=clean(body.cardSlug,64).toLowerCase();
   if(!codePattern.test(code))return fail('Code d’activation invalide.');
   if(body.action==='load'){
@@ -64,6 +69,7 @@ export async function POST(request:Request){
    profile.coverPositionX=coverNumber(body.profile.coverPositionX,0,100,50);profile.coverPositionY=coverNumber(body.profile.coverPositionY,0,100,50);
   }
   if('portfolioImages' in body.profile){try{profile.portfolioImages=cleanPortfolio(body.profile.portfolioImages)}catch(error){return fail(error instanceof Error?error.message:'Portfolio invalide.')}}
+  if('cvDocument' in body.profile){try{profile.cvDocument=cleanProfileDocument(body.profile.cvDocument)}catch(error){return fail(error instanceof Error?error.message:'Document invalide.')}}
   profile.destinationMode=['profile','whatsapp','instagram','custom'].includes(body.profile.destinationMode)?body.profile.destinationMode:'profile';
   if(String(profile.displayName).length<2)return fail('Ajoutez votre nom complet.');
   const saved=await writeSupabase('rpc/update_card_profile',{p_activation_code:code,p_profile:profile}) as Record<string,unknown>|null;

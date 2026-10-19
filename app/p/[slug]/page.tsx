@@ -6,6 +6,8 @@ import {InstagramIcon,WhatsAppIcon} from '../../profile-brand-icons';
 import SaveContact from '../../save-contact';
 import PortfolioGallery from '../../portfolio-gallery';
 import {profileMediaUrl} from '../../profile-media';
+import ProfileDocumentCard from '../../profile-document-card';
+import {profileDocumentUrl} from '../../profile-document';
 export const dynamic='force-dynamic';
 
 const socialBases:Record<string,string>={instagram:'https://instagram.com/',facebook:'https://facebook.com/',linkedin:'https://linkedin.com/in/',tiktok:'https://tiktok.com/@',youtube:'https://youtube.com/@',x:'https://x.com/',snapchat:'https://snapchat.com/add/',telegram:'https://t.me/',pinterest:'https://pinterest.com/',github:'https://github.com/',behance:'https://behance.net/',dribbble:'https://dribbble.com/',twitch:'https://twitch.tv/',spotify:'https://open.spotify.com/'};
@@ -37,6 +39,7 @@ export default async function Page({params}:{params:Promise<{slug:string}>}){
    {instagramLink&&<a className="profile-action-instagram" href={instagramLink} target="_blank" rel="noreferrer"><span><InstagramIcon/></span><small>Instagram</small></a>}
   </div>}
   <div className="public-profile-links">{details.map(link=><a href={link.href} key={link.label} target={link.href.startsWith('http')?'_blank':undefined} rel="noreferrer"><span>{link.icon}</span><span><small>{link.label}</small><strong>{link.value}</strong></span></a>)}</div>
+  {p.cv_document&&<ProfileDocumentCard document={p.cv_document} href={profileDocumentUrl(p.public_slug,p.cv_document.id)} downloadHref={profileDocumentUrl(p.public_slug,p.cv_document.id,true)}/>}
   {hasLocation&&<a className="public-location-action" href={mapLink} target="_blank" rel="noreferrer"><MapPin/>Itinéraire</a>}
   {socials.length>0&&<div className="public-socials" aria-label="Autres réseaux sociaux">{socials.map(item=><a href={item.href} key={item.key} target="_blank" rel="noreferrer" aria-label={item.label}>{item.icon}<small>{item.label}</small></a>)}</div>}
   {hasLocation&&<div className="public-map-card"><div><MapPin/><span><small>LOCALISATION</small><strong>{locationLabel}</strong></span></div><a href={mapLink} target="_blank" rel="noreferrer">Ouvrir dans Google Maps</a></div>}
