@@ -215,7 +215,7 @@ export function primaryImage(product: SiteProduct): ProductImage {
 function withStudioMedia(product: SiteProduct): SiteProduct {
  const media = studioMedia[product.id as keyof typeof studioMedia];
  const current = product.images?.[0]?.url || product.imageUrl;
- const legacy = ['/product-concept.webp','/product-concept.png','/carte-visite-digitale.jpg','/pack-essentiel-stand.png'];
+ const legacy = ['/product-concept.webp','/product-concept.png','/carte-visite-digitale.jpg','/pack-essentiel-stand.png','/images/stand-prestige-studio.webp'];
  if (!media || (current && !legacy.includes(current))) return product;
  return {...product,imageUrl:media.url,imageAlt:media.alt,images:[media,...(product.images?.slice(1)||[])],seo:{...product.seo,ogImage:!product.seo?.ogImage || legacy.includes(product.seo.ogImage)?media.url:product.seo.ogImage}};
 }

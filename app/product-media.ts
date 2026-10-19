@@ -58,14 +58,14 @@ export const studioMedia = {
     }
   },
   "prestige": {
-    "url": "/images/stand-prestige-studio.webp",
-    "alt": "Stand personnalisable du Pack Prestige 5Tap avec emplacement pour votre logo",
+    "url": "/images/stand-prestige-insta-v2.webp",
+    "alt": "Exemple de stand NFC Google Review personnalisé LUX PHONE en acrylique transparent avec pied doré",
     "width": 1536,
     "height": 1024,
-    "title": "Stand personnalisable du Pack Prestige 5Tap avec emplacement pour votre logo",
-    "caption": "Aperçu du stand personnalisable. Le pack comprend aussi une carte NFC Google Review.",
+    "title": "Pack Prestige — exemple de stand personnalisé",
+    "caption": "Exemple de personnalisation. Votre visuel est validé avant préparation. Le pack comprend aussi une carte Google Review.",
     "metadata": {
-      "source": "5Tap product reference — AI studio visual",
+      "source": "5Tap insta — adaptation catalogue avec imagegen",
       "type": "product"
     }
   }

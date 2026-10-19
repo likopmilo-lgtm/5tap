@@ -523,3 +523,8 @@ Object.assign(es, {
  'Livraison :':'Entrega:',
  'partout au Maroc':'en todo Marruecos'
 });
+
+// Légende du nouveau visuel Prestige.
+Object.assign(en, {"Exemple de personnalisation. Votre visuel est validé avant préparation. Le pack comprend aussi une carte Google Review.":"Customisation example. You approve your design before preparation. The pack also includes one Google Review card."});
+Object.assign(ar, {"Exemple de personnalisation. Votre visuel est validé avant préparation. Le pack comprend aussi une carte Google Review.":"مثال ديال التخصيص. كتوافق على التصميم ديالك قبل التحضير. الباك فيه حتى كارطة Google Review وحدة."});
+Object.assign(es, {"Exemple de personnalisation. Votre visuel est validé avant préparation. Le pack comprend aussi une carte Google Review.":"Ejemplo de personalización. Apruebas el diseño antes de la preparación. El pack también incluye una tarjeta Google Review."});
