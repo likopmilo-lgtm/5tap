@@ -1,5 +1,9 @@
 import type {SVGProps} from 'react';
 
+export function TikTokIcon(props:SVGProps<SVGSVGElement>){
+ return <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}><path d="M16.5 2h-3.4v13.6a3 3 0 1 1-2.6-3V9.1a6.5 6.5 0 1 0 6 6.5V8.7a8.2 8.2 0 0 0 4.5 1.4V6.7A4.8 4.8 0 0 1 16.5 2Z"/></svg>;
+}
+
 export function InstagramIcon(props:SVGProps<SVGSVGElement>){
  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true" {...props}><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>;
 }

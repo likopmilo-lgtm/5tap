@@ -173,6 +173,9 @@ html[dir="rtl"] .nav,html[dir="rtl"] .actions,html[dir="rtl"] .checks,html[dir="
 .public-quick-actions .profile-action-call>span,.profile-device .profile-quick-actions .profile-action-call>span{background:#d4af37;border-color:#e4c55c}.public-quick-actions .profile-action-call svg,.profile-device .profile-quick-actions .profile-action-call svg{color:#1a1a1a}
 .public-quick-actions .profile-action-whatsapp>span,.profile-device .profile-quick-actions .profile-action-whatsapp>span{background:#188b56;border-color:#2ab778}
 .public-quick-actions .profile-action-instagram>span,.profile-device .profile-quick-actions .profile-action-instagram>span{background:linear-gradient(135deg,#7144bf,#c72e73 58%,#dd883a);border-color:#d45a94}
+.public-quick-actions .profile-action-tiktok>span,.profile-device .profile-quick-actions .profile-action-tiktok>span{background:#080808;border-color:#626262}
+.public-quick-actions .profile-action-tiktok svg,.profile-device .profile-quick-actions .profile-action-tiktok svg{filter:drop-shadow(-1px -1px 0 #25f4ee) drop-shadow(1px 1px 0 #fe2c55)}
+.public-quick-actions[data-action-count="4"],.profile-device .profile-quick-actions[data-action-count="4"]{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .public-quick-actions small,.profile-device .profile-quick-actions a small{display:block;font-size:12px;font-weight:700;color:#f5f3ee;margin-top:0}
 .public-quick-actions a:hover>span,.profile-device .profile-quick-actions a:hover>span{transform:translateY(-2px);filter:brightness(1.12)}
 .public-quick-actions a:focus-visible,.public-save-contact:focus-visible,.public-location-action:focus-visible{outline:2px solid #e1c35f;outline-offset:4px}
@@ -180,6 +183,7 @@ html[dir="rtl"] .nav,html[dir="rtl"] .actions,html[dir="rtl"] .checks,html[dir="
 .public-profile-city,.profile-preview-city{display:flex;align-items:center;justify-content:center;gap:6px;margin:9px auto 18px;font-size:12px;line-height:1.5;color:#aaa69c;overflow-wrap:anywhere}.public-profile-city svg,.profile-preview-city svg{width:14px;height:14px;flex-shrink:0;color:#d4af37}
 .profile-device .profile-quick-actions a>span{width:54px;height:54px;border-radius:16px}.profile-device .profile-quick-actions a>span svg{width:28px;height:28px}.profile-device .profile-quick-actions a small{margin-top:8px;font-size:11px}
 @media(max-width:360px){.public-quick-actions{gap:6px}.public-quick-actions a>span{width:56px;height:56px}.public-quick-actions small{font-size:11px}}
+@media(max-width:360px){.public-quick-actions[data-action-count="4"],.profile-device .profile-quick-actions[data-action-count="4"]{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}}
 
 /* Optional cover and portfolio. Media is only rendered when the owner adds it. */
 .public-profile-cover,.profile-cover{overflow:hidden}
