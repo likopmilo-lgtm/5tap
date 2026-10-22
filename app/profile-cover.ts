@@ -1,10 +1,12 @@
-export type CoverSettings={coverHeight:number;coverZoom:number;coverPositionX:number;coverPositionY:number};
+export type CoverFit='cover'|'contain';
+export type CoverSettings={coverHeight:number;coverZoom:number;coverPositionX:number;coverPositionY:number;coverFit?:CoverFit};
 type Size={width:number;height:number};
 type Point={x:number;y:number};
 
-export function coverImageStyle(settings:Pick<CoverSettings,'coverZoom'|'coverPositionX'|'coverPositionY'>){
+export function coverImageStyle(settings:Pick<CoverSettings,'coverZoom'|'coverPositionX'|'coverPositionY'|'coverFit'>){
+ if(settings.coverFit==='contain')return {objectFit:'contain' as const,objectPosition:'50% 50%',transform:'none',transformOrigin:'50% 50%'};
  const position=`${settings.coverPositionX}% ${settings.coverPositionY}%`;
- return {objectPosition:position,transform:`scale(${settings.coverZoom/100})`,transformOrigin:position};
+ return {objectFit:'cover' as const,objectPosition:position,transform:`scale(${settings.coverZoom/100})`,transformOrigin:position};
 }
 
 export function coverDragPosition(image:Size,frame:Size,zoom:number,start:Point,delta:Point):Point{

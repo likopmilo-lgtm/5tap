@@ -11,6 +11,7 @@ export type PublicCardProfile={
  instagram:string;linkedin:string;facebook:string;custom_label:string;custom_url:string;
  avatar_data_url:string;social_links:SocialLink[];
  cover_media_id?:string;cover_height?:number;cover_zoom?:number;cover_position_x?:number;cover_position_y?:number;
+ cover_fit?:'cover'|'contain';
  portfolio_images?:PortfolioImage[];
  cv_document?:ProfileDocument|null;
  destination_mode:'profile'|'whatsapp'|'instagram'|'custom';is_active:boolean;published_at:string|null;

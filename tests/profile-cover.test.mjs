@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {coverDragPosition} from '../app/profile-cover.ts';
+import {coverDragPosition,coverImageStyle} from '../app/profile-cover.ts';
 
 test('portrait photos can move vertically without introducing empty edges',()=>{
  const image={width:236,height:419},frame={width:350,height:170};
@@ -29,4 +29,13 @@ test('equivalent drags on mobile and desktop produce the same focal point',()=>{
  const desktop=coverDragPosition(image,{width:400,height:200},150,start,{x:40,y:-20});
  const mobile=coverDragPosition(image,{width:200,height:100},150,start,{x:20,y:-10});
  assert.deepEqual(mobile,desktop);
+});
+
+test('full-photo mode ignores previous zoom and crop so all four image edges stay visible',()=>{
+ for(const crop of [{coverZoom:200,coverPositionX:0,coverPositionY:100},{coverZoom:100,coverPositionX:50,coverPositionY:50}]){
+  const style=coverImageStyle({...crop,coverFit:'contain'});
+  assert.equal(style.objectFit,'contain');assert.equal(style.transform,'none');assert.equal(style.objectPosition,'50% 50%');
+ }
+ const legacy=coverImageStyle({coverZoom:125,coverPositionX:34,coverPositionY:10});
+ assert.equal(legacy.objectFit,'cover');assert.equal(legacy.transform,'scale(1.25)');assert.equal(legacy.objectPosition,'34% 10%');
 });

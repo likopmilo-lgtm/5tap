@@ -33,6 +33,7 @@ function toClient(row:Record<string,unknown>){
   customLabel:String(row.custom_label||''),customUrl:String(row.custom_url||''),avatarDataUrl:String(row.avatar_data_url||''),
   socialLinks:legacy,destinationMode:String(row.destination_mode||'profile'),
   coverDataUrl:String(row.cover_data_url||''),coverId:String(row.cover_media_id||''),
+  coverFit:row.cover_fit==='contain'?'contain':'cover',
   coverHeight:coverNumber(row.cover_height,120,320,180),coverZoom:coverNumber(row.cover_zoom,100,200,100),
   coverPositionX:coverNumber(row.cover_position_x,0,100,50),coverPositionY:coverNumber(row.cover_position_y,0,100,50),
   portfolioImages:Array.isArray(row.portfolio_images)?row.portfolio_images:[],
@@ -60,6 +61,10 @@ export async function POST(request:Request){
   for(const field of fields)profile[field]=clean(body.profile[field],field==='bio'?500:field==='address'?300:field.toLowerCase().includes('url')||['website','linkedin','facebook'].includes(field)?500:200);
   profile.avatarDataUrl=cleanAvatar(body.profile.avatarDataUrl);
   profile.socialLinks=cleanSocialLinks(body.profile.socialLinks);
+  if('coverFit' in body.profile){
+   if(!['cover','contain'].includes(body.profile.coverFit))return fail('Mode de couverture invalide.');
+   profile.coverFit=body.profile.coverFit;
+  }
   if('coverDataUrl' in body.profile){
    const cover=body.profile.coverDataUrl;
    if(cover!==''&&!imageData(cover))return fail('Image de couverture invalide ou trop volumineuse.');
