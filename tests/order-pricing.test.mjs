@@ -42,3 +42,17 @@ test('all six catalogue products can be ordered together without a delivery char
  assert.equal(response.status,201);const result=await response.json();
  assert.equal(result.items.length,6);assert.equal(result.shipping,0);assert.equal(result.total,products.reduce((sum,p)=>sum+p.price,0));
 });
+
+test('the landing page records the displayed total without requiring a WhatsApp redirect',async()=>{
+ const body={id:randomUUID(),name:'TEST LANDING',phone:'+212600000000',city:'Rabat',address:'Ville : Rabat. Adresse à confirmer.',notes:'TEST LOCAL UNIQUEMENT',items:[{id:'carte-visite-personnalisee',quantity:2}],expectedTotal:498};
+ const response=await POST(new Request('https://5tap.ma/api/orders',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://5tap.ma'},body:JSON.stringify(body)}));
+ assert.equal(response.status,201);const saved=await response.json();assert.equal(saved.total,498);assert.equal(saved.items[0].id,'carte-visite-personnalisee');assert.equal(saved.items[0].quantity,2);
+ assert.equal(fixture.saved.source,'website');assert.equal(fixture.saved.status,'awaiting_whatsapp_confirmation');assert.equal(response.headers.get('Location'),null);
+});
+
+test('a changed or tampered expected total is rejected before creating an order',async()=>{
+ fixture.saved=null;
+ const body={id:randomUUID(),name:'TEST LANDING',phone:'+212600000000',city:'Rabat',address:'Ville : Rabat. Adresse à confirmer.',notes:'TEST LOCAL UNIQUEMENT',items:[{id:'carte-visite',quantity:1,price:1}],expectedTotal:149};
+ const response=await POST(new Request('https://5tap.ma/api/orders',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://5tap.ma'},body:JSON.stringify(body)}));
+ assert.equal(response.status,409);const quote=await response.json();assert.equal(quote.code,'PRICE_CHANGED');assert.equal(quote.total,179);assert.equal(quote.unitPrice,179);assert.equal(fixture.saved,null);
+});

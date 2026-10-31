@@ -51,12 +51,14 @@ export type SiteSettings = {
   defaultTitle: string;
   defaultDescription: string;
   metaPixelId?: string;
+  metaPixelIdPrepared?: string;
   googleAnalyticsId?: string;
   googleTagManagerId?: string;
   currency: string;
   tangierShipping: number;
   moroccoShipping: number;
   promotionHeadline?: string;
+  nfcLandingReferencePrices?: Record<string,number|null>;
 };
 
 export type SiteData = {

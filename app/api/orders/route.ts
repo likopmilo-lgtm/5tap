@@ -17,6 +17,11 @@ export async function POST(request:Request){
   const site=await getSiteData();const products=site.products;const ids=new Set();const items=[];
   for(const item of b.items){const p=products.find(p=>p.id===item?.id||p.slug===item?.id);if(!p||ids.has(p.id)||!Number.isInteger(item.quantity)||item.quantity<1||item.quantity>50)return fail('Quantité ou produit invalide.');ids.add(p.id);items.push({id:p.id,name:p.name,price:p.price,quantity:item.quantity});}
   const subtotal=items.reduce((s,p)=>s+p.price*p.quantity,0);const city=b.city.trim();const shipping=deliveryFee(site.settings,city);const promo=await quotePromo(b.promoCode,subtotal);const {total}=orderTotals(subtotal,shipping,promo.discount);const orderNotes=[b.notes.trim(),...(promo.code?[`Code promo : ${promo.code} | Remise : ${promo.discount} DH`]:[])].filter(Boolean).join("\n");
+  // A landing page must not silently submit an amount different from the one accepted.
+  if(b.expectedTotal!==undefined){
+   if(typeof b.expectedTotal!=='number'||!Number.isFinite(b.expectedTotal)||b.expectedTotal<0)return fail('Total invalide.');
+   if(Math.abs(b.expectedTotal-total)>.001)return Response.json({error:'Le prix a été actualisé. Vérifiez le nouveau total.',code:'PRICE_CHANGED',total,shipping,unitPrice:items.length===1?items[0].price:undefined},{status:409,headers:{'Cache-Control':'no-store'}});
+  }
   let row:any=null;
   if(hasSupabaseConfig()){
    const order={id:b.id,name:b.name.trim(),phone:b.phone.trim(),city,address:b.address.trim(),items,subtotal,shipping,total,notes:orderNotes,status:'awaiting_whatsapp_confirmation',source:'website',created_at:new Date().toISOString()};
