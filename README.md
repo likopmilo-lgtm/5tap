@@ -24,7 +24,7 @@ SUPABASE_ANON_KEY=your-public-anon-key
 
 Sans ces variables, le site garde un fallback local pour les tests, mais la production doit utiliser Supabase.
 
-Après l’enregistrement d’une commande, le checkout ouvre WhatsApp avec le récapitulatif prérempli. Le client appuie sur « Envoyer » pour le transmettre à 5Tap. Le numéro destinataire se modifie dans la valeur `whatsappUrl` de la table `site_settings`.
+Après l’enregistrement d’une commande dans Supabase, le checkout et la landing `/offre/carte-nfc` ouvrent WhatsApp avec le récapitulatif prérempli. Le client appuie sur « Envoyer » pour le transmettre à 5Tap. Un bouton sur la confirmation permet de rouvrir le même récapitulatif si nécessaire. Le numéro destinataire se modifie dans la valeur `whatsappUrl` de la table `site_settings`.
 
 ## Supabase
 

@@ -43,7 +43,7 @@ test('all six catalogue products can be ordered together without a delivery char
  assert.equal(result.items.length,6);assert.equal(result.shipping,0);assert.equal(result.total,products.reduce((sum,p)=>sum+p.price,0));
 });
 
-test('the landing page records the displayed total without requiring a WhatsApp redirect',async()=>{
+test('the landing page records the displayed total before WhatsApp confirmation',async()=>{
  const body={id:randomUUID(),name:'TEST LANDING',phone:'+212600000000',city:'Rabat',address:'Ville : Rabat. Adresse à confirmer.',notes:'TEST LOCAL UNIQUEMENT',items:[{id:'carte-visite-personnalisee',quantity:2}],expectedTotal:498};
  const response=await POST(new Request('https://5tap.ma/api/orders',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://5tap.ma'},body:JSON.stringify(body)}));
  assert.equal(response.status,201);const saved=await response.json();assert.equal(saved.total,498);assert.equal(saved.items[0].id,'carte-visite-personnalisee');assert.equal(saved.items[0].quantity,2);

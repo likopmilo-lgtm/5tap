@@ -41,11 +41,20 @@ Le formulaire utilise `/api/orders`. Le serveur recalcule les prix et frais et
 compare `expectedTotal` au montant affiché. S'il a changé, réponse 409 et nouvelle
 validation explicite avant création d'une demande.
 
-Après réponse 201, le site affiche référence, quantité, total et prochaines étapes.
-Aucune redirection WhatsApp imposée. Le support contacte le client pour confirmer
-les informations. Le statut reste `awaiting_whatsapp_confirmation` et la source
-`website`, compatibles avec la RLS existante. Les notes précisent la version et
-les conditions d'avance ou de paiement à la livraison.
+Depuis le 3 novembre 2026, après réponse 201, le site conserve la confirmation
+(référence, quantité, total) puis ouvre WhatsApp avec le récapitulatif. Le client
+doit appuyer sur « Envoyer » dans WhatsApp pour le transmettre à 5Tap ; aucun
+envoi automatique n'est annoncé. Un bouton permet de rouvrir le même message
+sans recréer une commande si l'application ne s'ouvre pas. Les notices, messages
+et informations de confidentialité sont disponibles en FR, darija, EN et ES.
+La confirmation est conservée dans le sessionStorage de l'onglet pendant
+30 minutes pour le retour depuis WhatsApp. « Passer une autre commande »
+efface cette confirmation et crée une nouvelle référence à la prochaine demande.
+Un stockage bloqué ou indisponible n'empêche ni l'enregistrement ni WhatsApp.
+Le statut reste `awaiting_whatsapp_confirmation` et la source `website`, compatibles
+avec la RLS existante. Les montants du récapitulatif proviennent de la réponse
+du serveur, avec les conditions d'avance ou de paiement à la livraison.
+Le même Pixel et le même événement Lead après enregistrement sont conservés.
 
 Le suivi humain des demandes dans Supabase reste nécessaire. Un événement Lead
 ne garantit pas une vente payée/livrée. La gestion complète de l'idempotence en
@@ -113,7 +122,9 @@ La QA navigateur utilise `outputs/landing-browser-qa.mjs`, ignoré par Git :
 le véritable gestionnaire de commandes écrit en mémoire locale. Aucune commande
 de test dans Supabase. Simuler une erreur conserve les champs et permet de
 réessayer. Deux personnalisées = 498 DH ; deux standards = 358 DH ; livraison 0.
-La confirmation s'affiche sans ouvrir WhatsApp.
+La confirmation reste accessible après l'ouverture de WhatsApp et propose le
+même récapitulatif via un bouton. En cas d'erreur d'enregistrement, aucun lien
+de commande n'est ouvert et les champs sont conservés pour réessayer.
 
 Les aperçus et preuves sont dans `outputs/landing-qa/v2/`. Vérifications de largeur,
 images, prix et textes pour FR, darija AR (RTL), EN et ES. Les tests navigateur ne

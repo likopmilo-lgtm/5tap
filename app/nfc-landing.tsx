@@ -7,8 +7,9 @@ import {primaryImage,SiteProduct,SiteSettings} from './site-data';
 import {compareAtPrice,deliveryFee,orderTotals} from './pricing';
 import {trackCommerce} from './commerce-tracking';
 import {landingCopy,LandingLanguage} from './nfc-landing-copy';
+import {clearLandingConfirmation,landingConfirmation,rememberLandingConfirmation,restoreLandingConfirmation,type LandingOrderConfirmation,type SavedLandingOrder} from './landing-checkout';
 import './nfc-landing.css';
-type OrderResult={id:string;items:{id:string;name:string;price:number;quantity:number}[];subtotal:number;shipping:number;total:number};
+type OrderResult=LandingOrderConfirmation;
 const locale={fr:'fr-MA',ar:'ar-MA',en:'en-GB',es:'es-ES'};
 function newOrderId(){
  if(typeof crypto.randomUUID==='function')return crypto.randomUUID();
@@ -28,6 +29,7 @@ export default function NfcLanding({product:initialProduct,alternative,settings,
  const money=(n:number)=>`${n.toLocaleString(locale[lang],{maximumFractionDigits:2})} DH`;
  const item=[{id:product.id,price:product.price,quantity}],whatsapp=settings.whatsappUrl||'https://wa.me/212672606072';
  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title=`${productTitle} — ${product.price} DH | 5Tap`;document.querySelector('meta[name="description"]')?.setAttribute('content',custom?t.intro:t.standardIntro);try{localStorage.setItem('5tap-lang',lang)}catch{}window.dispatchEvent(new CustomEvent('5tap-language',{detail:lang}));},[lang,product.price,productTitle,t,custom]);
+ useEffect(()=>{try{const products=[initialProduct,...(alternative?[alternative]:[])],saved=restoreLandingConfirmation(sessionStorage,products.map(p=>p.id));if(saved){const selected=products.find(p=>p.id===saved.productId)!;setProduct({...selected,price:saved.result.items[0].price});setQuantity(saved.result.items[0].quantity);setResult(saved.result)}}catch{}},[initialProduct,alternative]);
  useEffect(()=>{trackCommerce('ViewContent',[{id:product.id,price:product.price,quantity:1}],{once:'landing-view:'+product.id})},[product.id,product.price]);
  useEffect(()=>{if(!formArea.current||typeof IntersectionObserver==='undefined')return;const observer=new IntersectionObserver(entries=>setFormInView(entries[0].isIntersecting),{threshold:.05});observer.observe(formArea.current);return()=>observer.disconnect()},[]);
  useEffect(()=>{if(result){successRef.current?.focus();successRef.current?.scrollIntoView({block:'center',behavior:'auto'})}},[result]);
@@ -35,6 +37,7 @@ export default function NfcLanding({product:initialProduct,alternative,settings,
  function chooseVersion(next:SiteProduct){if(busy||result)return;setProduct(next);setGallery('card');setError('')}
  function begin(){trackCommerce('InitiateCheckout',item,{once:'landing-checkout:'+product.id})}
  function support(){trackCommerce('Contact',item)}
+ function anotherOrder(){try{clearLandingConfirmation(sessionStorage)}catch{}setResult(null);setError('');setQuantity(1);requestId.current='';lastPayload.current=''}
  async function submit(e:FormEvent<HTMLFormElement>){
   e.preventDefault();if(busyRef.current)return;busyRef.current=true;setBusy(true);setError('');begin();
   const form=new FormData(e.currentTarget),name=String(form.get('name')||'').trim(),phone=String(form.get('phone')||'').trim();
@@ -45,11 +48,16 @@ export default function NfcLanding({product:initialProduct,alternative,settings,
    if(signature!==lastPayload.current){requestId.current=newOrderId();lastPayload.current=signature}
    timeout=setTimeout(()=>controller.abort(),20000);
    const response=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,id:requestId.current}),signal:controller.signal});
-   const saved=await response.json() as OrderResult&{code?:string;unitPrice?:number};
+   const saved=await response.json() as SavedLandingOrder&{code?:string;unitPrice?:number};
    if(!response.ok){if(saved.code==='PRICE_CHANGED'&&Number.isFinite(saved.unitPrice)&&Number.isFinite(saved.shipping)){setProduct(p=>({...p,price:saved.unitPrice!}));setShippingSettings(s=>({...s,tangierShipping:saved.shipping,moroccoShipping:saved.shipping}));throw new Error('PRICE_CHANGED')}throw new Error('ORDER_FAILED')}
    if(!saved.id||!Array.isArray(saved.items)||!Number.isFinite(saved.total))throw new Error('ORDER_FAILED');
-   setResult(saved);trackCommerce('Lead',saved.items,{once:`order:${saved.id}`,eventId:`order-${saved.id}`});
+   const confirmation=landingConfirmation(saved,{name,phone,city:city.trim()},custom,lang,whatsapp);
+   const confirmed={...saved,whatsappUrl:confirmation.whatsappUrl};
+   setResult(confirmed);try{rememberLandingConfirmation(sessionStorage,product.id,confirmed)}catch{}
+   trackCommerce('Lead',saved.items,{once:`order:${saved.id}`,eventId:`order-${saved.id}`});
    void fetch('/api/events',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'order_request',path:'/offre/carte-nfc',productId:product.id,payload:{orderId:saved.id,value:saved.total,currency:'MAD',quantity,language:lang}}),keepalive:true}).catch(()=>{});
+   // Keep the saved-order screen and its link available if the app cannot open.
+   try{window.location.assign(confirmation.whatsappUrl)}catch{}
   }catch(error){setError(error instanceof Error&&error.message==='PRICE_CHANGED'?'priceChanged':'error')}finally{if(timeout)clearTimeout(timeout);busyRef.current=false;setBusy(false)}
  }
  const price=<div className="nfc-price-row"><div className="nfc-current-price"><strong><bdi>{money(product.price)}</bdi></strong>{old&&<del><bdi>{money(old)}</bdi></del>}<span>{t.each}</span></div>{old&&<span className="nfc-savings"><bdi>−{money(old-product.price)}</bdi></span>}</div>;
@@ -70,7 +78,7 @@ export default function NfcLanding({product:initialProduct,alternative,settings,
      <div className="nfc-offer"><div className="nfc-offer-top"><span>{t.offer}</span>{custom&&<strong>{t.recommended}</strong>}</div>{price}<p className="nfc-delivery-tag"><Truck size={15}/>{freeEverywhere?t.free:t.delivery}</p></div>
      {alternative&&!result&&<fieldset className="nfc-version-picker" aria-label={t.version}><legend>{t.version}</legend><div className="nfc-version-options">{[initialProduct,alternative].map(p=><label key={p.id}><input type="radio" name="card-version" value={p.id} checked={product.id===p.id} disabled={busy} onChange={()=>chooseVersion(p)}/><span><strong>{p.custom?t.custom:t.standard}</strong><small>{p.custom?t.customIncludes[0]:t.standardIncludes[0]}</small></span><span className="nfc-version-price"><strong><bdi>{money(p.price)}</bdi></strong>{compareAtPrice(p)&&<del><bdi>{money(compareAtPrice(p)!)}</bdi></del>}</span></label>)}</div></fieldset>}
      <div ref={formArea} className="nfc-form-area">
-      {result?<div ref={successRef} tabIndex={-1} className="nfc-order-success" role="status"><CheckCircle2 size={40}/><h2>{t.successTitle}</h2><p>{custom?t.successCustom:t.successStandard}</p><dl><div><dt>{t.reference}</dt><dd><bdi>5TAP-{result.id.replace(/-/g,'').slice(0,6).toUpperCase()}</bdi></dd></div><div><dt>{t.quantity}</dt><dd>{result.items.reduce((sum,p)=>sum+p.quantity,0)}</dd></div><div><dt>{t.successTotal}</dt><dd><bdi>{money(result.total)}</bdi></dd></div></dl><p className="nfc-payment-note">{custom?t.customPayment:t.standardPayment}</p><a className="nfc-text-link" href={whatsapp} target="_blank" rel="noreferrer" onClick={support}><MessageCircle size={17}/>{t.support}</a></div>:<form className="nfc-order-form" onSubmit={submit} onFocus={begin}>
+      {result?<div ref={successRef} tabIndex={-1} className="nfc-order-success" role="status"><CheckCircle2 size={40}/><h2>{t.successTitle}</h2><p>{custom?t.successCustom:t.successStandard}</p><dl><div><dt>{t.reference}</dt><dd><bdi>5TAP-{result.id.replace(/-/g,'').slice(0,6).toUpperCase()}</bdi></dd></div><div><dt>{t.quantity}</dt><dd>{result.items.reduce((sum,p)=>sum+p.quantity,0)}</dd></div><div><dt>{t.successTotal}</dt><dd><bdi>{money(result.total)}</bdi></dd></div></dl><p className="nfc-payment-note">{custom?t.customPayment:t.standardPayment}</p><p>{t.sendNotice}</p><a className="nfc-button" href={result.whatsappUrl} onClick={support}><MessageCircle size={19}/>{t.openWhatsApp}</a><button type="button" className="nfc-text-link" onClick={anotherOrder}>{t.newOrder}</button></div>:<form className="nfc-order-form" onSubmit={submit} onFocus={begin}>
        <h2>{t.formTitle}</h2><div className="nfc-form-fields"><label className="nfc-full-field">{t.name}<input name="name" autoComplete="name" required minLength={2} maxLength={100} disabled={busy}/></label><label>{t.phone}<input name="phone" type="tel" inputMode="tel" dir="ltr" autoComplete="tel" required pattern="\+?[0-9\s()\-]{9,20}" maxLength={20} placeholder="06 00 00 00 00" disabled={busy}/></label><label>{t.city}<input name="city" autoComplete="address-level2" required minLength={2} maxLength={100} placeholder={t.cityPlaceholder} value={city} onChange={e=>setCity(e.currentTarget.value)} disabled={busy}/></label></div>
        <div className="nfc-order-quantity"><span>{t.quantity}</span><div><button type="button" aria-label={t.less} disabled={busy||quantity<=1} onClick={()=>setQuantity(q=>q-1)}>−</button><output aria-live="polite">{quantity}</output><button type="button" aria-label={t.more} disabled={busy||quantity>=50} onClick={()=>setQuantity(q=>q+1)}>+</button></div></div>
        <dl className="nfc-order-totals"><div><dt>{t.subtotal}</dt><dd><bdi>{money(subtotal)}</bdi></dd></div><div><dt>{t.shipping}</dt><dd>{shipping===0?<span className="nfc-free">{t.freeShort}</span>:<bdi>{money(shipping)}</bdi>}</dd></div><div className="nfc-order-total"><dt>{t.total}</dt><dd><bdi>{money(total)}</bdi></dd></div></dl>
